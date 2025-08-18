@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { NewsArticle, AIComment } from '@/lib/types';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -18,7 +18,9 @@ interface NewsCardProps {
 
 export function NewsCard({ article }: NewsCardProps) {
   const [aiComments, setAiComments] = useState<AIComment[]>([]);
-  const [loadingComments, setLoadingComments] = useState(true);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [commentsFetched, setCommentsFetched] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [liked, setLiked] = useState(false);
 
   const getAvatarText = (source: string) => {
@@ -42,12 +44,16 @@ export function NewsCard({ article }: NewsCardProps) {
       );
       setAiComments(comments);
       setLoadingComments(false);
+      setCommentsFetched(true);
     }
   }, [article.title, article.content]);
 
-  useEffect(() => {
-    fetchComments();
-  }, [fetchComments]);
+  const handleCommentClick = () => {
+    if (!commentsFetched) {
+      fetchComments();
+    }
+    setShowComments(!showComments);
+  };
 
   return (
     <Card className="animate-in fade-in-0 duration-500 ease-out">
@@ -129,16 +135,18 @@ export function NewsCard({ article }: NewsCardProps) {
         <Button
           variant="ghost"
           className="w-full font-semibold text-muted-foreground"
+          onClick={handleCommentClick}
         >
           <MessageSquare className="mr-2 h-5 w-5" />
           Comment
         </Button>
       </div>
-
-      <div className="px-3 pb-2">
-        <Separator />
-        <CommentSection aiComments={aiComments} loading={loadingComments} />
-      </div>
+      {showComments && (
+        <div className="px-3 pb-2">
+          <Separator />
+          <CommentSection aiComments={aiComments} loading={loadingComments} />
+        </div>
+      )}
     </Card>
   );
 }
