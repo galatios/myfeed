@@ -6,12 +6,6 @@ import { type NewsArticle } from '@/lib/types';
 import { fetchNewsAction } from '@/app/actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import { Video, Image as ImageIcon, Smile } from 'lucide-react';
-import Image from 'next/image';
 
 function NewsSkeleton() {
   return (
@@ -48,45 +42,6 @@ function NewsSkeleton() {
   );
 }
 
-function CreatePost() {
-  return (
-    <Card>
-      <CardHeader className='pb-3'>
-        <div className="flex items-start space-x-3">
-          <Avatar>
-            <Image src="https://placehold.co/40x40.png" alt="User Avatar" width={40} height={40} className="rounded-full" data-ai-hint="user avatar" />
-            <AvatarFallback>U</AvatarFallback>
-          </Avatar>
-          <Textarea
-            placeholder="What's on your mind?"
-            className="flex-1 resize-none border-none focus-visible:ring-0 shadow-none bg-secondary text-base"
-          />
-        </div>
-      </CardHeader>
-      <Separator />
-      <CardContent className='p-3'>
-        <div className='flex justify-between'>
-          <div className="flex space-x-1">
-            <Button variant="ghost" className="text-muted-foreground text-sm">
-              <Video className="h-5 w-5 text-red-500" />
-              <span className='ml-2'>Live video</span>
-            </Button>
-            <Button variant="ghost" className="text-muted-foreground text-sm">
-              <ImageIcon className="h-5 w-5 text-green-500" />
-              <span className='ml-2'>Photo/video</span>
-            </Button>
-            <Button variant="ghost" className="text-muted-foreground text-sm">
-              <Smile className="h-5 w-5 text-yellow-500" />
-              <span className='ml-2'>Feeling/activity</span>
-            </Button>
-          </div>
-          <Button size="sm">Post</Button>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 export default function Home() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,7 +68,6 @@ export default function Home() {
       <main className="flex-1">
         <div className="container mx-auto max-w-lg py-6">
           <div className="space-y-4">
-            <CreatePost />
             {loading ? (
               <NewsSkeleton />
             ) : (

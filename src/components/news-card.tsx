@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CommentSection } from './comment-section';
 import { getSummaryAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { Lightbulb, Loader2, ThumbsUp, MessageSquare, MoreHorizontal } from 'lucide-react';
+import { Lightbulb, Loader2, ThumbsUp, MessageSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -72,9 +72,6 @@ export function NewsCard({ article }: NewsCardProps) {
               {formatDistanceToNow(new Date(article.timestamp), { addSuffix: true })}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full">
-            <MoreHorizontal className='h-5 w-5 text-muted-foreground'/>
-          </Button>
         </div>
       </CardHeader>
       
