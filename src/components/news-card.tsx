@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CommentSection } from './comment-section';
 import { getSummaryAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { Lightbulb, Loader2, ThumbsUp, MessageSquare, MoreHorizontal, Share2 } from 'lucide-react';
+import { Lightbulb, Loader2, ThumbsUp, MessageSquare, MoreHorizontal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -84,43 +84,41 @@ export function NewsCard({ article }: NewsCardProps) {
         </p>
 
         {article.imageUrl && (
-            <div className="relative w-full aspect-video">
-              <Image
-                src={article.imageUrl}
-                alt={article.title}
-                fill
-                className="object-cover"
-                data-ai-hint="article image"
-              />
-            </div>
-          )}
+          <div className="relative w-full aspect-video">
+            <Image
+              src={article.imageUrl}
+              alt={article.title}
+              fill
+              className="object-cover"
+              data-ai-hint="article image"
+            />
+          </div>
+        )}
 
-        {summary && (
-          <div className='px-3'>
-            <Alert className="bg-primary/5 border-primary/20">
-              <Lightbulb className="h-4 w-4 text-primary" />
-              <AlertTitle className="text-primary font-semibold">AI Summary</AlertTitle>
-              <AlertDescription>{summary}</AlertDescription>
-            </Alert>
-          </div>
-        )}
-         {!summary && (
-          <div className='px-3'>
-            <Button
-              variant="outline"
-              onClick={handleSummarize}
-              disabled={isLoading}
-              className="w-full"
-            >
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Lightbulb className="mr-2 h-4 w-4" />
-              )}
-              {isLoading ? 'Summarizing...' : 'Summarize with AI'}
-            </Button>
-          </div>
-        )}
+        <div className="px-3 space-y-3">
+          {summary && (
+              <Alert className="bg-primary/5 border-primary/20">
+                <Lightbulb className="h-4 w-4 text-primary" />
+                <AlertTitle className="text-primary font-semibold">AI Summary</AlertTitle>
+                <AlertDescription>{summary}</AlertDescription>
+              </Alert>
+          )}
+          {!summary && (
+              <Button
+                variant="outline"
+                onClick={handleSummarize}
+                disabled={isLoading}
+                className="w-full"
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Lightbulb className="mr-2 h-4 w-4" />
+                )}
+                {isLoading ? 'Summarizing...' : 'Summarize with AI'}
+              </Button>
+          )}
+        </div>
       </CardContent>
        <div className='px-3 pt-2 pb-1'>
         <Separator />
