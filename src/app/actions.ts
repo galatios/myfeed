@@ -1,6 +1,8 @@
 'use server';
 
 import { summarizeArticle } from '@/ai/flows/summarize-article';
+import { fetchNews } from '@/ai/flows/fetch-news';
+import type { NewsArticle } from '@/lib/mock-news';
 
 export async function getSummaryAction(
   content: string
@@ -30,4 +32,9 @@ export async function getSummaryAction(
       error: 'Failed to generate summary due to an unexpected error.',
     };
   }
+}
+
+export async function fetchNewsAction(): Promise<NewsArticle[]> {
+  const result = await fetchNews();
+  return result.articles;
 }
