@@ -51,7 +51,7 @@ function CreatePost() {
       <CardHeader className='pb-3'>
         <div className="flex items-start space-x-3">
           <Avatar>
-            <AvatarImage src="https://placehold.co/40x40.png?text=U" data-ai-hint="user avatar" />
+            <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="user avatar" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <Textarea

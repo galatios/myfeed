@@ -17,7 +17,6 @@ export function Header() {
     <header className="sticky top-0 z-20 w-full border-b bg-card shadow-sm">
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center space-x-2">
-          <Newspaper className="h-8 w-8 text-primary" />
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input placeholder="Search feed" className="h-9 w-[250px] rounded-full bg-secondary pl-9" />
@@ -44,7 +43,7 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className='h-9 w-9'>
-                  <AvatarImage src="https://placehold.co/40x40.png?text=U" data-ai-hint="user avatar" />
+                  <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="user avatar" />
                   <AvatarFallback>U</AvatarFallback>
                 </Avatar>
               </Button>
