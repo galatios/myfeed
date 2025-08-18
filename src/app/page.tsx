@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/header';
 import { NewsCard } from '@/components/news-card';
-import { type NewsArticle } from '@/lib/mock-news';
+import { type NewsArticle } from '@/lib/types';
 import { fetchNewsAction } from '@/app/actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Video, Image as ImageIcon, Smile } from 'lucide-react';
+import Image from 'next/image';
 
 function NewsSkeleton() {
   return (
@@ -53,7 +54,7 @@ function CreatePost() {
       <CardHeader className='pb-3'>
         <div className="flex items-start space-x-3">
           <Avatar>
-            <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="user avatar" />
+            <Image src="https://placehold.co/40x40.png" alt="User Avatar" width={40} height={40} className="rounded-full" data-ai-hint="user avatar" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <Textarea

@@ -2,8 +2,7 @@
 
 import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { fetchNews } from '@/ai/flows/fetch-news';
-import type { NewsArticle } from '@/lib/mock-news';
-import { mockNewsArticles } from '@/lib/mock-news';
+import type { NewsArticle } from '@/lib/types';
 
 export async function getSummaryAction(
   content: string

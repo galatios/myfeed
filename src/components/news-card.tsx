@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import type { NewsArticle } from '@/lib/mock-news';
+import type { NewsArticle } from '@/lib/types';
 import Image from 'next/image';
 import {
   Card,
