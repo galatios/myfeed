@@ -4,11 +4,11 @@ export interface NewsArticle {
   content: string;
   link: string;
   source: string;
-  timestamp: Date;
+  timestamp: string;
   imageUrl?: string;
 }
 
-export const mockNewsArticles: NewsArticle[] = [
+export const mockNewsArticles: Omit<NewsArticle, 'timestamp'> & { timestamp: Date }[] = [
   {
     id: '1',
     title: 'Global Markets Surge on Positive Economic Data',
