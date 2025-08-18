@@ -44,8 +44,8 @@ export default function Home() {
       <main className="flex-1">
         <div className="container mx-auto max-w-2xl py-8">
           <div className="space-y-6">
-            {news.map((article) => (
-              <NewsCard key={article.id} article={article} />
+            {news.map((article, index) => (
+              <NewsCard key={`${article.id}-${index}`} article={article} />
             ))}
           </div>
         </div>
