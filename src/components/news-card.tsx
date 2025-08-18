@@ -44,16 +44,18 @@ export function NewsCard({ article }: NewsCardProps) {
       </CardHeader>
       
       <CardContent className="p-0">
-        <p className="text-sm px-3 pb-3">
-            <a
-              href={article.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline font-semibold"
-            >
-              {article.title}
-            </a>
-        </p>
+        {!article.imageUrl && (
+          <p className="text-sm px-3 pb-3">
+              <a
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline font-semibold"
+              >
+                {article.title}
+              </a>
+          </p>
+        )}
 
         {article.imageUrl && (
           <div className="relative w-full aspect-video">
@@ -64,6 +66,15 @@ export function NewsCard({ article }: NewsCardProps) {
               className="object-cover"
               data-ai-hint="article image"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-0 left-0 p-3 w-full"
+            >
+              <h2 className="text-lg font-bold text-white hover:underline">{article.title}</h2>
+            </a>
           </div>
         )}
       </CardContent>
