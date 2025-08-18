@@ -49,7 +49,6 @@ export function NewsCard({ article }: NewsCardProps) {
     return source.substring(0,2).toUpperCase();
   }
 
-
   return (
     <Card className="animate-in fade-in-0 duration-500 ease-out">
       <CardHeader className="p-3">
@@ -78,8 +77,9 @@ export function NewsCard({ article }: NewsCardProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-0 space-y-3">
-        <p className="text-sm px-3">
+      
+      <CardContent className="p-0">
+        <p className="text-sm px-3 pb-3">
             {article.title}
         </p>
 
@@ -95,7 +95,7 @@ export function NewsCard({ article }: NewsCardProps) {
           </div>
         )}
 
-        <div className="px-3 space-y-3">
+        <div className="p-3 space-y-3">
           {summary && (
               <Alert className="bg-primary/5 border-primary/20">
                 <Lightbulb className="h-4 w-4 text-primary" />
@@ -120,9 +120,11 @@ export function NewsCard({ article }: NewsCardProps) {
           )}
         </div>
       </CardContent>
-       <div className='px-3 pt-2 pb-1'>
+      
+      <div className='px-3 pt-2 pb-1'>
         <Separator />
-       </div>
+      </div>
+      
       <div className="px-1 pb-1 flex justify-around">
           <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
             <ThumbsUp className="mr-2 h-5 w-5" />
@@ -133,6 +135,7 @@ export function NewsCard({ article }: NewsCardProps) {
             Comment
           </Button>
       </div>
+
       <div className='px-3 pb-2'>
         <Separator />
         <CommentSection />
