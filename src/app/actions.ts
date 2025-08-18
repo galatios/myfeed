@@ -44,8 +44,7 @@ export async function fetchNewsAction(
     const lowercasedTerm = searchTerm.toLowerCase();
     articles = articles.filter(
       (article) =>
-        article.title.toLowerCase().includes(lowercasedTerm) ||
-        article.content.toLowerCase().includes(lowercasedTerm)
+        article.title.toLowerCase().includes(lowercasedTerm)
     );
   }
   return articles;
