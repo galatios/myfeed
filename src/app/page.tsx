@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/header';
 import { NewsCard } from '@/components/news-card';
 import { type NewsArticle } from '@/lib/mock-news';
@@ -91,24 +91,19 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    const getNews = async () => {
-      setLoading(true);
-      const fetchedNews = await fetchNewsAction();
-      fetchedNews.sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
-      setNews(fetchedNews);
-      setLoading(false);
-    };
-    getNews();
+  const getNews = useCallback(async (term: string) => {
+    setLoading(true);
+    const fetchedNews = await fetchNewsAction(term);
+    fetchedNews.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+    setNews(fetchedNews);
+    setLoading(false);
   }, []);
 
-  const filteredNews = news.filter(
-    (article) =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.content.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    getNews(searchTerm);
+  }, [searchTerm, getNews]);
 
 
   return (
@@ -121,7 +116,7 @@ export default function Home() {
             {loading ? (
               <NewsSkeleton />
             ) : (
-              filteredNews.map((article, index) => (
+              news.map((article, index) => (
                 <NewsCard key={`${article.id}-${index}`} article={article} />
               ))
             )}

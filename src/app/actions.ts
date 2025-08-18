@@ -3,6 +3,7 @@
 import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { fetchNews } from '@/ai/flows/fetch-news';
 import type { NewsArticle } from '@/lib/mock-news';
+import { mockNewsArticles } from '@/lib/mock-news';
 
 export async function getSummaryAction(
   content: string
@@ -34,7 +35,19 @@ export async function getSummaryAction(
   }
 }
 
-export async function fetchNewsAction(): Promise<NewsArticle[]> {
+export async function fetchNewsAction(
+  searchTerm?: string
+): Promise<NewsArticle[]> {
   const result = await fetchNews();
-  return result.articles;
+  let articles = result.articles;
+
+  if (searchTerm) {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    articles = articles.filter(
+      (article) =>
+        article.title.toLowerCase().includes(lowercasedTerm) ||
+        article.content.toLowerCase().includes(lowercasedTerm)
+    );
+  }
+  return articles;
 }
