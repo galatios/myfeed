@@ -7,3 +7,8 @@ export interface NewsArticle {
   timestamp: string;
   imageUrl?: string;
 }
+
+export interface AIComment {
+  username: string;
+  commentText: string;
+}
