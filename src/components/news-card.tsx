@@ -58,16 +58,6 @@ export function NewsCard({ article }: NewsCardProps) {
             <AvatarFallback>{getAvatarText(article.source)}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
-            <p className="font-semibold text-sm">
-              <a
-                href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                {article.source}
-              </a>
-            </p>
             <p className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(article.timestamp), { addSuffix: true })}
             </p>
@@ -77,7 +67,14 @@ export function NewsCard({ article }: NewsCardProps) {
       
       <CardContent className="p-0">
         <p className="text-sm px-3 pb-3">
-            {article.title}
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline font-semibold"
+            >
+              {article.title}
+            </a>
         </p>
 
         {article.imageUrl && (
