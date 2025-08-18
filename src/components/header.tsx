@@ -1,4 +1,4 @@
-import { Home, Bell, MessageSquare, Users, Search, Newspaper } from 'lucide-react';
+import { Home, Bell, MessageSquare, Users, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -21,10 +21,10 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
     <header className="sticky top-0 z-20 w-full border-b bg-card shadow-sm">
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center space-x-2">
-          <div className="relative hidden md:block">
+          <div className="relative md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 
-              placeholder="Search feed" 
+              placeholder="Search feed..." 
               className="h-9 w-[250px] rounded-full bg-secondary pl-9"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
