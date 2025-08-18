@@ -9,7 +9,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { mockNewsArticles, type NewsArticle } from '@/lib/mock-news';
+import { mockNewsArticles } from '@/lib/mock-news';
 
 // Define the schema for a single news article
 const NewsArticleSchema = z.object({
@@ -18,7 +18,7 @@ const NewsArticleSchema = z.object({
   content: z.string(),
   link: z.string(),
   source: z.string(),
-  timestamp: z.date(),
+  timestamp: z.string().datetime(),
 });
 
 const FetchNewsOutputSchema = z.object({
@@ -39,7 +39,10 @@ const fetchNewsFlow = ai.defineFlow(
     // In a real application, you would fetch this data from an external API.
     // For this example, we are using mock data.
     return {
-      articles: mockNewsArticles,
+      articles: mockNewsArticles.map((article) => ({
+        ...article,
+        timestamp: article.timestamp.toISOString(),
+      })),
     };
   }
 );
