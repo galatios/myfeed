@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         hostname: 'media.zenfs.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 's.yimg.com',
+        pathname: '/**',
+      },
     ],
   },
 };
