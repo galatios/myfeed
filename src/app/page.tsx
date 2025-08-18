@@ -26,6 +26,7 @@ function NewsSkeleton() {
         <CardContent>
           <Skeleton className="h-4 w-11/12 mb-2" />
           <Skeleton className="h-4 w-full" />
+          <Skeleton className="aspect-video w-full mt-4" />
         </CardContent>
       </Card>
       <Card>
@@ -39,6 +40,7 @@ function NewsSkeleton() {
         <CardContent>
           <Skeleton className="h-4 w-11/12 mb-2" />
           <Skeleton className="h-4 w-full" />
+          <Skeleton className="aspect-video w-full mt-4" />
         </CardContent>
       </Card>
     </div>
@@ -63,21 +65,21 @@ function CreatePost() {
       <Separator />
       <CardContent className='p-3'>
         <div className='flex justify-between'>
-          <div className="flex space-x-2">
-            <Button variant="ghost" className="text-muted-foreground">
+          <div className="flex space-x-1">
+            <Button variant="ghost" className="text-muted-foreground text-sm">
               <Video className="h-5 w-5 text-red-500" />
               <span className='ml-2'>Live video</span>
             </Button>
-            <Button variant="ghost" className="text-muted-foreground">
+            <Button variant="ghost" className="text-muted-foreground text-sm">
               <ImageIcon className="h-5 w-5 text-green-500" />
               <span className='ml-2'>Photo/video</span>
             </Button>
-            <Button variant="ghost" className="text-muted-foreground">
+            <Button variant="ghost" className="text-muted-foreground text-sm">
               <Smile className="h-5 w-5 text-yellow-500" />
               <span className='ml-2'>Feeling/activity</span>
             </Button>
           </div>
-          <Button>Post</Button>
+          <Button size="sm">Post</Button>
         </div>
       </CardContent>
     </Card>
@@ -102,11 +104,11 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-secondary">
+    <div className="flex min-h-screen flex-col bg-secondary/70">
       <Header />
       <main className="flex-1">
-        <div className="container mx-auto max-w-xl py-8">
-          <div className="space-y-6">
+        <div className="container mx-auto max-w-lg py-6">
+          <div className="space-y-4">
             <CreatePost />
             {loading ? (
               <NewsSkeleton />

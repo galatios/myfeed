@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CommentSection } from './comment-section';
 import { getSummaryAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { Lightbulb, Loader2, ThumbsUp, MessageSquare, MoreHorizontal } from 'lucide-react';
+import { Lightbulb, Loader2, ThumbsUp, MessageSquare, MoreHorizontal, Share2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -51,7 +51,7 @@ export function NewsCard({ article }: NewsCardProps) {
 
 
   return (
-    <Card className="animate-in fade-in-0 duration-500 ease-out shadow-sm">
+    <Card className="animate-in fade-in-0 duration-500 ease-out">
       <CardHeader className="p-3">
         <div className="flex items-center space-x-3">
           <Avatar>
@@ -78,16 +78,9 @@ export function NewsCard({ article }: NewsCardProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-0 space-y-4">
+      <CardContent className="p-0 space-y-3">
         <p className="text-sm px-3">
-          <a
-            href={article.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary hover:underline"
-          >
             {article.title}
-          </a>
         </p>
 
         {article.imageUrl && (
@@ -111,27 +104,8 @@ export function NewsCard({ article }: NewsCardProps) {
             </Alert>
           </div>
         )}
-      </CardContent>
-       <div className='px-3 pt-2 pb-2'>
-        <Separator />
-       </div>
-      <div className="px-3 pb-2 flex justify-around">
-          <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
-            <ThumbsUp className="mr-2 h-5 w-5" />
-            Like
-          </Button>
-          <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
-            <MessageSquare className="mr-2 h-5 w-5" />
-            Comment
-          </Button>
-      </div>
-      <div className='px-3 pb-2'>
-        <Separator />
-        <CommentSection />
-      </div>
-
-      {!summary && (
-          <div className='p-3 border-t'>
+         {!summary && (
+          <div className='px-3'>
             <Button
               variant="outline"
               onClick={handleSummarize}
@@ -147,6 +121,24 @@ export function NewsCard({ article }: NewsCardProps) {
             </Button>
           </div>
         )}
+      </CardContent>
+       <div className='px-3 pt-2 pb-1'>
+        <Separator />
+       </div>
+      <div className="px-1 pb-1 flex justify-around">
+          <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
+            <ThumbsUp className="mr-2 h-5 w-5" />
+            Like
+          </Button>
+          <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
+            <MessageSquare className="mr-2 h-5 w-5" />
+            Comment
+          </Button>
+      </div>
+      <div className='px-3 pb-2'>
+        <Separator />
+        <CommentSection />
+      </div>
     </Card>
   );
 }
