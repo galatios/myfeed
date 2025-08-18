@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import type { NewsArticle } from '@/lib/types';
 import Image from 'next/image';
 import {
@@ -8,11 +7,8 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CommentSection } from './comment-section';
-import { getSummaryAction } from '@/app/actions';
-import { useToast } from '@/hooks/use-toast';
-import { Lightbulb, Loader2, ThumbsUp, MessageSquare } from 'lucide-react';
+import { ThumbsUp, MessageSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -22,24 +18,6 @@ interface NewsCardProps {
 }
 
 export function NewsCard({ article }: NewsCardProps) {
-  const [summary, setSummary] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-
-  const handleSummarize = async () => {
-    setIsLoading(true);
-    const result = await getSummaryAction(article.content);
-    setIsLoading(false);
-    if (result.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Summarization Failed',
-        description: result.error,
-      });
-    } else {
-      setSummary(result.summary);
-    }
-  };
   
   const getAvatarText = (source: string) => {
     const words = source.split(' ');
@@ -88,31 +66,6 @@ export function NewsCard({ article }: NewsCardProps) {
             />
           </div>
         )}
-
-        <div className="p-3 space-y-3">
-          {summary && (
-              <Alert className="bg-primary/5 border-primary/20">
-                <Lightbulb className="h-4 w-4 text-primary" />
-                <AlertTitle className="text-primary font-semibold">AI Summary</AlertTitle>
-                <AlertDescription>{summary}</AlertDescription>
-              </Alert>
-          )}
-          {!summary && (
-              <Button
-                variant="outline"
-                onClick={handleSummarize}
-                disabled={isLoading}
-                className="w-full"
-              >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Lightbulb className="mr-2 h-4 w-4" />
-                )}
-                {isLoading ? 'Summarizing...' : 'Summarize with AI'}
-              </Button>
-          )}
-        </div>
       </CardContent>
       
       <div className='px-3 pt-2 pb-1'>
