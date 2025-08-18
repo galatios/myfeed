@@ -89,6 +89,7 @@ function CreatePost() {
 export default function Home() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const getNews = async () => {
@@ -103,9 +104,16 @@ export default function Home() {
     getNews();
   }, []);
 
+  const filteredNews = news.filter(
+    (article) =>
+      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
   return (
     <div className="flex min-h-screen flex-col bg-secondary/70">
-      <Header />
+      <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <main className="flex-1">
         <div className="container mx-auto max-w-lg py-6">
           <div className="space-y-4">
@@ -113,7 +121,7 @@ export default function Home() {
             {loading ? (
               <NewsSkeleton />
             ) : (
-              news.map((article, index) => (
+              filteredNews.map((article, index) => (
                 <NewsCard key={`${article.id}-${index}`} article={article} />
               ))
             )}
