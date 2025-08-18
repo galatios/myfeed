@@ -19,6 +19,7 @@ const NewsArticleSchema = z.object({
   link: z.string(),
   source: z.string(),
   timestamp: z.string().datetime(),
+  imageUrl: z.string().url().optional(),
 });
 
 const FetchNewsOutputSchema = z.object({

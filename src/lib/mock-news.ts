@@ -5,6 +5,7 @@ export interface NewsArticle {
   link: string;
   source: string;
   timestamp: Date;
+  imageUrl?: string;
 }
 
 export const mockNewsArticles: NewsArticle[] = [
@@ -15,6 +16,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Yahoo Finance',
     timestamp: new Date('2023-10-27T10:00:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '2',
@@ -23,6 +25,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Reuters',
     timestamp: new Date('2023-10-27T10:05:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '3',
@@ -31,6 +34,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Bloomberg',
     timestamp: new Date('2023-10-27T10:10:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '4',
@@ -39,6 +43,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Wall Street Journal',
     timestamp: new Date('2023-10-27T10:15:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '5',
@@ -47,6 +52,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Yahoo Finance',
     timestamp: new Date('2023-10-27T10:20:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '6',
@@ -55,6 +61,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Financial Times',
     timestamp: new Date('2023-10-27T10:25:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '7',
@@ -63,6 +70,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Reuters',
     timestamp: new Date('2023-10-27T10:30:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '8',
@@ -71,6 +79,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Associated Press',
     timestamp: new Date('2023-10-27T10:35:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '9',
@@ -79,6 +88,7 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Bloomberg',
     timestamp: new Date('2023-10-27T10:40:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
   {
     id: '10',
@@ -87,5 +97,6 @@ export const mockNewsArticles: NewsArticle[] = [
     link: 'https://finance.yahoo.com/news/',
     source: 'Wall Street Journal',
     timestamp: new Date('2023-10-27T10:45:00Z'),
+    imageUrl: 'https://placehold.co/600x400.png',
   },
 ];

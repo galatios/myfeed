@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import type { NewsArticle } from '@/lib/mock-news';
+import Image from 'next/image';
 import {
   Card,
   CardContent,
@@ -11,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CommentSection } from './comment-section';
 import { getSummaryAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { Lightbulb, Loader2, ThumbsUp, MessageSquare, Share2, MoreHorizontal } from 'lucide-react';
+import { Lightbulb, Loader2, ThumbsUp, MessageSquare, MoreHorizontal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -77,8 +78,8 @@ export function NewsCard({ article }: NewsCardProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-3 pt-0 space-y-4">
-        <p className="text-sm">
+      <CardContent className="p-0 space-y-4">
+        <p className="text-sm px-3">
           <a
             href={article.link}
             target="_blank"
@@ -89,15 +90,29 @@ export function NewsCard({ article }: NewsCardProps) {
           </a>
         </p>
 
+        {article.imageUrl && (
+            <div className="relative w-full aspect-video">
+              <Image
+                src={article.imageUrl}
+                alt={article.title}
+                fill
+                className="object-cover"
+                data-ai-hint="article image"
+              />
+            </div>
+          )}
+
         {summary && (
-          <Alert className="bg-primary/5 border-primary/20">
-            <Lightbulb className="h-4 w-4 text-primary" />
-            <AlertTitle className="text-primary font-semibold">AI Summary</AlertTitle>
-            <AlertDescription>{summary}</AlertDescription>
-          </Alert>
+          <div className='px-3'>
+            <Alert className="bg-primary/5 border-primary/20">
+              <Lightbulb className="h-4 w-4 text-primary" />
+              <AlertTitle className="text-primary font-semibold">AI Summary</AlertTitle>
+              <AlertDescription>{summary}</AlertDescription>
+            </Alert>
+          </div>
         )}
       </CardContent>
-       <div className='px-3 pb-2'>
+       <div className='px-3 pt-2 pb-2'>
         <Separator />
        </div>
       <div className="px-3 pb-2 flex justify-around">
@@ -108,10 +123,6 @@ export function NewsCard({ article }: NewsCardProps) {
           <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
             <MessageSquare className="mr-2 h-5 w-5" />
             Comment
-          </Button>
-          <Button variant="ghost" className="w-full text-muted-foreground font-semibold">
-            <Share2 className="mr-2 h-5 w-5" />
-            Share
           </Button>
       </div>
       <div className='px-3 pb-2'>
