@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Smile, Camera, Sticker } from 'lucide-react';
 import type { AIComment } from '@/lib/types';
 import { Skeleton } from './ui/skeleton';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface Comment {
   id: number;
@@ -31,6 +32,8 @@ function CommentSkeleton() {
   );
 }
 
+const emojis = ['😀', '😂', '😍', '🤔', '👍', '👎', '🔥', '🚀', '📈', '📉', '💰', '🤯'];
+
 export function CommentSection({ aiComments, loading }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -42,6 +45,10 @@ export function CommentSection({ aiComments, loading }: CommentSectionProps) {
     }
     return name.substring(0,2).toUpperCase();
   }
+
+  const handleEmojiClick = (emoji: string) => {
+    setNewComment(newComment + emoji);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +109,26 @@ export function CommentSection({ aiComments, loading }: CommentSectionProps) {
             className="rounded-full bg-secondary pr-28"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Smile className="h-4 w-4" /></Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Smile className="h-4 w-4" /></Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto border-none bg-transparent shadow-none">
+                <div className="grid grid-cols-6 gap-2 rounded-lg border bg-card p-2 shadow-sm">
+                  {emojis.map((emoji) => (
+                    <Button
+                      key={emoji}
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-md text-xl"
+                      onClick={() => handleEmojiClick(emoji)}
+                    >
+                      {emoji}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Camera className="h-4 w-4" /></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Sticker className="h-4 w-4" /></Button>
           </div>
