@@ -129,7 +129,11 @@ export function NewsCard({ article }: NewsCardProps) {
           })}
           onClick={() => setLiked(!liked)}
         >
-          <ThumbsUp className="mr-2 h-5 w-5" />
+          <ThumbsUp
+            className={cn('mr-2 h-5 w-5', {
+              'fill-current': liked,
+            })}
+          />
           Like
         </Button>
         <Button
