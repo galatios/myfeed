@@ -9,7 +9,7 @@ import { ThumbsUp, Bot } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
-import { getSummaryAction, analyzeArticleAction } from '@/app/actions';
+import { analyzeArticleAction } from '@/app/actions';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -62,19 +62,10 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
     
     setLoadingAnalysis(true);
     try {
-      const [summaryRes, analysisRes] = await Promise.all([
-        getSummaryAction(article.content),
-        analyzeArticleAction(article.content)
-      ]);
+      const analysisRes = await analyzeArticleAction(article.content);
 
       if (analysisRes.analysis) {
-        setAnalysisResult({
-          summary: summaryRes.summary,
-          ...analysisRes.analysis
-        });
-        // This is a bit of a hack, but we want to update the article in the parent
-        // so filtering works. Ideally state is managed higher up.
-        article.topic = analysisRes.analysis.topic;
+        setAnalysisResult(analysisRes.analysis);
       } else if (analysisRes.error) {
          toast({
             variant: "destructive",
@@ -93,7 +84,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         setLoadingAnalysis(false);
         setAnalysisFetched(true);
     }
-  }, [article, analysisFetched, loadingAnalysis, toast]);
+  }, [article.content, analysisFetched, loadingAnalysis, toast]);
 
   const handleAnalyzeClick = () => {
     setShowAnalysis((prev) => !prev);
@@ -138,8 +129,8 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
             <VideoPlayer url={article.link} />
         ) : (
             <>
-            {!article.imageUrl && (
-              <p className="px-3 pb-3 text-sm">{article.content}</p>
+            {!article.imageUrl && article.content && (
+              <p className="px-3 pb-3 text-sm">{article.content.substring(0, 280)}...</p>
             )}
 
             {article.imageUrl && (

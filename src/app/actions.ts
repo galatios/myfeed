@@ -3,7 +3,7 @@
 import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { fetchNews } from '@/ai/flows/fetch-news';
 import { analyzeArticle } from '@/ai/flows/analyze-article';
-import type { NewsArticle, AIComment, AnalysisResult } from '@/lib/types';
+import type { NewsArticle, AnalysisResult } from '@/lib/types';
 
 export async function getSummaryAction(
   content: string
@@ -48,8 +48,22 @@ export async function fetchNewsAction(
         article.title.toLowerCase().includes(lowercasedTerm)
     );
   }
-  // Add isVideo property
-  return articles.map(article => ({ ...article, isVideo: article.link.includes('video.yahoo.com')}));
+
+  // Analyze articles to get their topics
+  const analyzedArticles = await Promise.all(articles.map(async (article) => {
+    try {
+      if (article.content && article.content.trim().length > 100) {
+        const analysis = await analyzeArticle({ articleContent: article.content });
+        return { ...article, topic: analysis.topic || 'General', isVideo: article.link.includes('video.yahoo.com') };
+      }
+      return { ...article, topic: 'General', isVideo: article.link.includes('video.yahoo.com') };
+    } catch (e) {
+      console.error(`Failed to analyze article ${article.id}`, e);
+      return { ...article, topic: 'General', isVideo: article.link.includes('video.yahoo.com') }; // Default topic on error
+    }
+  }));
+
+  return analyzedArticles;
 }
 
 export async function analyzeArticleAction(
@@ -65,7 +79,8 @@ export async function analyzeArticleAction(
   try {
     const result = await analyzeArticle({ articleContent: content });
     if (result) {
-      return { analysis: { ...result, topic: result.topic || 'General' }, error: null };
+      const summaryRes = await summarizeArticle({ articleContent: content });
+      return { analysis: { ...result, summary: summaryRes.summary }, error: null };
     }
     return { analysis: null, error: 'Analysis failed to return a result.' };
   } catch (e) {
