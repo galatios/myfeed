@@ -131,7 +131,7 @@ export default function ProfilePage() {
 
         <div className="text-center mt-8 pb-8">
             <Button>
-                <Mail className="mr-2 h-4 w-4" /> Contact Me
+                <Mail className="mr-2 h-4 w-4" /> babank me
             </Button>
         </div>
       </div>
