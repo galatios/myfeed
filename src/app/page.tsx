@@ -6,6 +6,7 @@ import { type NewsArticle } from '@/lib/types';
 import { fetchNewsAction } from '@/app/actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { NewsSidebar } from '@/components/news-sidebar';
 
 function NewsSkeleton() {
   return (
@@ -46,6 +47,19 @@ export default function Home() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [likedArticles, setLikedArticles] = useState<Set<string>>(new Set());
+
+  const toggleLike = (articleId: string) => {
+    setLikedArticles(prev => {
+      const newLiked = new Set(prev);
+      if (newLiked.has(articleId)) {
+        newLiked.delete(articleId);
+      } else {
+        newLiked.add(articleId);
+      }
+      return newLiked;
+    });
+  };
 
   const getNews = useCallback(async (term: string) => {
     setLoading(true);
@@ -66,15 +80,23 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-transparent">
       <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <main className="flex-1">
-        <div className="container mx-auto max-w-lg py-6">
-          <div className="space-y-4">
-            {loading ? (
-              <NewsSkeleton />
-            ) : (
-              news.map((article, index) => (
-                <NewsCard key={`${article.id}-${index}`} article={article} />
-              ))
-            )}
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-8 py-6">
+          <NewsSidebar articles={news} likedArticles={likedArticles} onToggleLike={toggleLike} loading={loading} />
+          <div className="max-w-lg mx-auto w-full">
+            <div className="space-y-4">
+              {loading ? (
+                <NewsSkeleton />
+              ) : (
+                news.map((article, index) => (
+                  <NewsCard 
+                    key={`${article.id}-${index}`} 
+                    article={article}
+                    isLiked={likedArticles.has(article.id)}
+                    onToggleLike={() => toggleLike(article.id)}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </div>
       </main>

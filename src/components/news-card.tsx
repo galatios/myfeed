@@ -14,14 +14,15 @@ import { cn } from '@/lib/utils';
 
 interface NewsCardProps {
   article: NewsArticle;
+  isLiked: boolean;
+  onToggleLike: () => void;
 }
 
-export function NewsCard({ article }: NewsCardProps) {
+export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
   const [aiComments, setAiComments] = useState<AIComment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [commentsFetched, setCommentsFetched] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [liked, setLiked] = useState(false);
 
   const getAvatarText = (source: string) => {
     const words = source.split(' ');
@@ -124,14 +125,14 @@ export function NewsCard({ article }: NewsCardProps) {
         <Button
           variant="ghost"
           className={cn('w-full font-semibold', {
-            'text-primary': liked,
-            'text-muted-foreground': !liked,
+            'text-primary': isLiked,
+            'text-muted-foreground': !isLiked,
           })}
-          onClick={() => setLiked(!liked)}
+          onClick={onToggleLike}
         >
           <ThumbsUp
             className={cn('mr-2 h-5 w-5', {
-              'fill-current': liked,
+              'fill-current': isLiked,
             })}
           />
           Like
