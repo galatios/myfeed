@@ -44,5 +44,8 @@ export async function fetchYahooFinanceNews(): Promise<NewsArticle[]> {
 
     const [articles, videos] = await Promise.all([articlePromise, videoPromise]);
 
-    return [...articles, ...videos];
+    const articleTitles = new Set(articles.map(a => a.title));
+    const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
+
+    return [...articles, ...uniqueVideos];
 }
