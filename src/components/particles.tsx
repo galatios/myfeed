@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export function Particles({
   className,
-  quantity = 100,
+  quantity = 30,
 }: {
   className?: string;
   quantity?: number;
