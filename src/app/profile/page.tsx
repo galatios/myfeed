@@ -15,14 +15,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { SiTiktok, SiYoutube, SiSpotify } from 'react-icons/si';
 import { Textarea } from '@/components/ui/textarea';
 
-const socialLinks = [
-  { icon: <Twitter className="h-5 w-5" />, href: '#' },
-  { icon: <Github className="h-5 w-5" />, href: '#' },
-  { icon: <Linkedin className="h-5 w-5" />, href: '#' },
-  { icon: <Instagram className="h-5 w-5" />, href: '#' },
-  { icon: <Facebook className="h-5 w-5" />, href: '#' },
-];
-
 const profileLinks = [
     { name: 'YouTube', icon: <SiYoutube className="h-6 w-6 text-[#FF0000]" />, url: 'https://youtube.com/user' },
     { name: 'Spotify', icon: <SiSpotify className="h-6 w-6 text-[#1DB954]" />, url: 'https://spotify.com/user' },
@@ -102,16 +94,6 @@ export default function ProfilePage() {
               </div>
             )}
           </div>
-        </div>
-
-        <div className="flex justify-center items-center space-x-2 mt-4">
-          {socialLinks.map((link, index) => (
-            <Button key={index} variant="outline" size="icon" asChild>
-              <a href={link.href} target="_blank" rel="noopener noreferrer">
-                {link.icon}
-              </a>
-            </Button>
-          ))}
         </div>
 
         <div className="mt-8">
