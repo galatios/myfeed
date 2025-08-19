@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Info, Lightbulb, TrendingUp, Briefcase } from 'lucide-react';
+import { Send, Smile, Info, Lightbulb, TrendingUp, Briefcase, Meh, Frown } from 'lucide-react';
 import type { AIComment, AnalysisResult } from '@/lib/types';
 import { Skeleton } from './ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface Comment {
   id: number;
@@ -33,6 +34,18 @@ function CommentSkeleton() {
 }
 
 const emojis = ['😀', '😂', '😍', '🤔', '👍', '👎', '🔥', '🚀', '📈', '📉', '💰', '🤯'];
+
+const sentimentIcons = {
+    Positive: <Smile className="h-4 w-4" />,
+    Negative: <Frown className="h-4 w-4" />,
+    Neutral: <Meh className="h-4 w-4" />,
+};
+
+const sentimentColors = {
+    Positive: 'text-green-500 bg-green-500/20',
+    Negative: 'text-red-500 bg-red-500/20',
+    Neutral: 'text-yellow-500 bg-yellow-500/20',
+}
 
 export function CommentSection({ analysis, loading }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -118,6 +131,17 @@ export function CommentSection({ analysis, loading }: CommentSectionProps) {
                     <p>{analysis.topic}</p>
                 </div>
               </div>
+            )}
+            {analysis.sentiment && (
+                <div className="flex items-start space-x-2">
+                     <Avatar className={cn("h-8 w-8", sentimentColors[analysis.sentiment])}>
+                        <AvatarFallback>{sentimentIcons[analysis.sentiment]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
+                        <p className={cn("font-semibold", sentimentColors[analysis.sentiment].split(' ')[0])}>Sentiment</p>
+                        <p>{analysis.sentiment}</p>
+                    </div>
+                </div>
             )}
           </div>
         )}

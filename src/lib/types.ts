@@ -23,4 +23,5 @@ export interface AnalysisResult {
   }[];
   keyTakeaways: string[];
   topic: string;
+  sentiment: 'Positive' | 'Negative' | 'Neutral';
 }
