@@ -2,7 +2,8 @@
 
 import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { fetchNews } from '@/ai/flows/fetch-news';
-import type { NewsArticle, AIComment } from '@/lib/types';
+import { analyzeArticle } from '@/ai/flows/analyze-article';
+import type { NewsArticle, AIComment, AnalysisResult } from '@/lib/types';
 
 export async function getSummaryAction(
   content: string
@@ -49,4 +50,29 @@ export async function fetchNewsAction(
   }
   // Add isVideo property
   return articles.map(article => ({ ...article, isVideo: article.link.includes('video.yahoo.com')}));
+}
+
+export async function analyzeArticleAction(
+  content: string
+): Promise<{ analysis: AnalysisResult | null; error: string | null }> {
+  if (!content || content.trim().length < 100) {
+    return {
+      analysis: null,
+      error: 'Article content is too short for analysis.',
+    };
+  }
+
+  try {
+    const result = await analyzeArticle({ articleContent: content });
+    if (result) {
+      return { analysis: { ...result, topic: result.topic || 'General' }, error: null };
+    }
+    return { analysis: null, error: 'Analysis failed to return a result.' };
+  } catch (e) {
+    console.error('Error in analyzeArticleAction:', e);
+    return {
+      analysis: null,
+      error: 'Failed to analyze article due to an unexpected error.',
+    };
+  }
 }

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile } from 'lucide-react';
-import type { AIComment } from '@/lib/types';
+import { Send, Smile, Info, Lightbulb, TrendingUp, Briefcase } from 'lucide-react';
+import type { AIComment, AnalysisResult } from '@/lib/types';
 import { Skeleton } from './ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -16,7 +16,7 @@ interface Comment {
 }
 
 interface CommentSectionProps {
-  aiComments: AIComment[];
+  analysis: AnalysisResult | null;
   loading: boolean;
 }
 
@@ -34,7 +34,7 @@ function CommentSkeleton() {
 
 const emojis = ['😀', '😂', '😍', '🤔', '👍', '👎', '🔥', '🚀', '📈', '📉', '💰', '🤯'];
 
-export function CommentSection({ aiComments, loading }: CommentSectionProps) {
+export function CommentSection({ analysis, loading }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
 
@@ -63,25 +63,64 @@ export function CommentSection({ aiComments, loading }: CommentSectionProps) {
 
   return (
     <div className="space-y-2 pt-2">
-      <div className="space-y-2">
-        {loading && (
-          <>
-            <CommentSkeleton />
-            <CommentSkeleton />
-          </>
+      <div className="space-y-4">
+        {loading && <CommentSkeleton />}
+        {!loading && analysis && (
+          <div className="space-y-4 animate-in fade-in-0 duration-300">
+             {analysis.summary && (
+              <div className="flex items-start space-x-2">
+                <Avatar className="h-8 w-8 bg-primary/20 text-primary">
+                    <AvatarFallback><Info className="h-4 w-4"/></AvatarFallback>
+                </Avatar>
+                <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
+                  <p className="font-semibold text-primary">AI Summary</p>
+                  <p>{analysis.summary}</p>
+                </div>
+              </div>
+            )}
+            {analysis.keyTakeaways && analysis.keyTakeaways.length > 0 && (
+              <div className="flex items-start space-x-2">
+                <Avatar className="h-8 w-8 bg-accent/20 text-accent-foreground">
+                    <AvatarFallback><Lightbulb className="h-4 w-4"/></AvatarFallback>
+                </Avatar>
+                <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
+                    <p className="font-semibold text-accent-foreground">Key Takeaways</p>
+                    <ul className="list-disc pl-4 space-y-1 mt-1">
+                      {analysis.keyTakeaways.map((item, index) => <li key={index}>{item}</li>)}
+                    </ul>
+                </div>
+              </div>
+            )}
+             {analysis.tickers && analysis.tickers.length > 0 && (
+              <div className="flex items-start space-x-2">
+                <Avatar className="h-8 w-8 bg-green-500/20 text-green-500">
+                    <AvatarFallback><TrendingUp className="h-4 w-4"/></AvatarFallback>
+                </Avatar>
+                <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
+                    <p className="font-semibold text-green-500">Stock Tickers</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {analysis.tickers.map(ticker => (
+                            <div key={ticker.symbol} className="bg-background border rounded-full px-3 py-1 text-xs">
+                                <span className="font-bold">{ticker.symbol}:</span> ${ticker.price.toFixed(2)}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+              </div>
+            )}
+            {analysis.topic && (
+              <div className="flex items-start space-x-2">
+                <Avatar className="h-8 w-8 bg-purple-500/20 text-purple-500">
+                    <AvatarFallback><Briefcase className="h-4 w-4"/></AvatarFallback>
+                </Avatar>
+                <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
+                    <p className="font-semibold text-purple-500">Topic</p>
+                    <p>{analysis.topic}</p>
+                </div>
+              </div>
+            )}
+          </div>
         )}
-        {!loading && aiComments.map((comment, index) => (
-           <div key={index} className="flex items-start space-x-2 animate-in fade-in-0 duration-300">
-             <Avatar className="h-8 w-8">
-                <AvatarImage src={`https://placehold.co/32x32.png?text=${getAvatarText(comment.username)}`} data-ai-hint="user avatar" />
-               <AvatarFallback>{getAvatarText(comment.username)}</AvatarFallback>
-             </Avatar>
-             <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
-               <p className="font-semibold">{comment.username}</p>
-               <p>{comment.commentText}</p>
-             </div>
-           </div>
-        ))}
         {comments.map((comment) => (
           <div key={comment.id} className="flex items-start space-x-2 animate-in fade-in-0 duration-300">
             <Avatar className="h-8 w-8">

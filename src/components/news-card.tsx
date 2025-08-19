@@ -1,15 +1,15 @@
 'use client';
 import { useState, useCallback } from 'react';
-import type { NewsArticle, AIComment } from '@/lib/types';
+import type { NewsArticle, AnalysisResult } from '@/lib/types';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CommentSection } from './comment-section';
-import { ThumbsUp, MessageSquare, PlayCircle } from 'lucide-react';
+import { ThumbsUp, Bot } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
-import { getSummaryAction } from '@/app/actions';
+import { getSummaryAction, analyzeArticleAction } from '@/app/actions';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -20,7 +20,6 @@ interface NewsCardProps {
 }
 
 function VideoPlayer({ url }: { url:string }) {
-    // Transform Yahoo Finance video page URL to embeddable URL
     const videoId = url.split('/').pop()?.split('.html')[0];
     if (!videoId) return null;
     const embedUrl = `https://www.yahoo.com/embed/video/${videoId}?format=embed&player_autoplay=false`;
@@ -40,10 +39,10 @@ function VideoPlayer({ url }: { url:string }) {
   }
 
 export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
-  const [aiComments, setAiComments] = useState<AIComment[]>([]);
-  const [loadingSummary, setLoadingSummary] = useState(false);
-  const [summaryFetched, setSummaryFetched] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [analysisFetched, setAnalysisFetched] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
   const { toast } = useToast();
 
   const getAvatarText = (source: string) => {
@@ -58,41 +57,48 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
     return source.substring(0, 2).toUpperCase();
   };
 
-  const fetchSummary = useCallback(async () => {
-    if (summaryFetched || loadingSummary || !article.content) return;
+  const fetchAnalysis = useCallback(async () => {
+    if (analysisFetched || loadingAnalysis || !article.content) return;
     
-    setLoadingSummary(true);
+    setLoadingAnalysis(true);
     try {
-      const result = await getSummaryAction(article.content);
-      if (result.summary) {
-        setAiComments([{
-            username: 'MarketWatch AI',
-            commentText: result.summary,
-        }]);
-      } else if (result.error) {
-        toast({
+      const [summaryRes, analysisRes] = await Promise.all([
+        getSummaryAction(article.content),
+        analyzeArticleAction(article.content)
+      ]);
+
+      if (analysisRes.analysis) {
+        setAnalysisResult({
+          summary: summaryRes.summary,
+          ...analysisRes.analysis
+        });
+        // This is a bit of a hack, but we want to update the article in the parent
+        // so filtering works. Ideally state is managed higher up.
+        article.topic = analysisRes.analysis.topic;
+      } else if (analysisRes.error) {
+         toast({
             variant: "destructive",
-            title: "Summarization Error",
-            description: result.error,
+            title: "Analysis Error",
+            description: analysisRes.error,
         });
       }
     } catch (error) {
-        console.error('Failed to fetch summary:', error);
+        console.error('Failed to fetch analysis:', error);
         toast({
             variant: "destructive",
-            title: "Summarization Error",
-            description: "An unexpected error occurred while fetching the summary.",
+            title: "Analysis Error",
+            description: "An unexpected error occurred while fetching the analysis.",
         });
     } finally {
-        setLoadingSummary(false);
-        setSummaryFetched(true);
+        setLoadingAnalysis(false);
+        setAnalysisFetched(true);
     }
-  }, [article.content, summaryFetched, loadingSummary, toast]);
+  }, [article, analysisFetched, loadingAnalysis, toast]);
 
-  const handleCommentClick = () => {
-    setShowComments((prev) => !prev);
-    if (!summaryFetched) {
-      fetchSummary();
+  const handleAnalyzeClick = () => {
+    setShowAnalysis((prev) => !prev);
+    if (!analysisFetched) {
+      fetchAnalysis();
     }
   };
 
@@ -174,18 +180,18 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         <Button
           variant="ghost"
           className="w-full font-semibold text-muted-foreground"
-          onClick={handleCommentClick}
+          onClick={handleAnalyzeClick}
         >
-          <MessageSquare className="mr-2 h-5 w-5" />
-          Comment
+          <Bot className="mr-2 h-5 w-5" />
+          Analyze
         </Button>
       </div>
-      {showComments && (
+      {showAnalysis && (
         <div className="px-3 pb-2">
           <Separator />
           <CommentSection 
-            aiComments={aiComments} 
-            loading={loadingSummary} 
+            analysis={analysisResult} 
+            loading={loadingAnalysis} 
           />
         </div>
       )}
