@@ -24,7 +24,6 @@ const profileLinks = [
     { name: 'YouTube', icon: <SiYoutube className="h-6 w-6 text-[#FF0000]" />, url: 'https://youtube.com/user' },
     { name: 'Spotify', icon: <SiSpotify className="h-6 w-6 text-[#1DB954]" />, url: 'https://spotify.com/user' },
     { name: 'TikTok', icon: <SiTiktok className="h-6 w-6" />, url: 'https://tiktok.com/@user' },
-    { name: 'My Website', icon: <LinkIcon className="h-6 w-6" />, url: 'https://user.com' },
 ];
 
 export default function ProfilePage() {
