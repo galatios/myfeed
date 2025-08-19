@@ -39,9 +39,6 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                     <Home className="h-7 w-7" />
                 </Button>
             </Link>
-          <Button variant="ghost" size="icon" className="h-12 w-24 rounded-lg text-muted-foreground hover:bg-secondary">
-            <Users className="h-7 w-7" />
-          </Button>
         </div>
 
         <div className="flex items-center space-x-2">
