@@ -57,6 +57,8 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
   };
 
   const fetchComments = useCallback(async () => {
+    if (commentsFetched || loadingComments) return;
+    
     if (article.title && article.content) {
       setLoadingComments(true);
       const comments = await generateCommentsAction(
@@ -67,13 +69,13 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       setLoadingComments(false);
       setCommentsFetched(true);
     }
-  }, [article.title, article.content]);
+  }, [article.title, article.content, commentsFetched, loadingComments]);
 
   const handleCommentClick = () => {
+    setShowComments((prev) => !prev);
     if (!commentsFetched) {
       fetchComments();
     }
-    setShowComments(true);
   };
 
   return (
