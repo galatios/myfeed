@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Link from 'next/link';
 
 interface HeaderProps {
   searchTerm: string;
@@ -33,9 +34,11 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
         </div>
         
         <div className="hidden md:flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="h-12 w-24 rounded-none border-b-2 border-primary text-primary">
-            <Home className="h-7 w-7" />
-          </Button>
+            <Link href="/" passHref>
+                <Button variant="ghost" size="icon" className="h-12 w-24 rounded-none border-b-2 border-primary text-primary">
+                    <Home className="h-7 w-7" />
+                </Button>
+            </Link>
           <Button variant="ghost" size="icon" className="h-12 w-24 rounded-lg text-muted-foreground hover:bg-secondary">
             <Users className="h-7 w-7" />
           </Button>
@@ -67,7 +70,9 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <Link href="/profile" passHref>
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Log out</DropdownMenuItem>

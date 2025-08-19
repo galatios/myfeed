@@ -7,6 +7,7 @@ import { fetchNewsAction } from '@/app/actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { NewsSidebar } from '@/components/news-sidebar';
+import Link from 'next/link';
 
 function NewsSkeleton() {
   return (
