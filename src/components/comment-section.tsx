@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Camera, Sticker } from 'lucide-react';
+import { Send, Smile, Sticker } from 'lucide-react';
 import type { AIComment } from '@/lib/types';
 import { Skeleton } from './ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -129,7 +129,6 @@ export function CommentSection({ aiComments, loading }: CommentSectionProps) {
                 </div>
               </PopoverContent>
             </Popover>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Camera className="h-4 w-4" /></Button>
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Sticker className="h-4 w-4" /></Button>
           </div>
         </div>
