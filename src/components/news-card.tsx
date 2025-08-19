@@ -59,12 +59,12 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
   };
 
   const fetchSummary = useCallback(async () => {
-    if (summaryFetched || loadingSummary) return;
+    if (summaryFetched || loadingSummary || !article.content) return;
     
-    if (article.content) {
-      setLoadingSummary(true);
+    setLoadingSummary(true);
+    try {
       const result = await getSummaryAction(article.content);
-      if(result.summary) {
+      if (result.summary) {
         setAiComments([{
             username: 'MarketWatch AI',
             commentText: result.summary,
@@ -74,10 +74,18 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
             variant: "destructive",
             title: "Summarization Error",
             description: result.error,
-        })
+        });
       }
-      setLoadingSummary(false);
-      setSummaryFetched(true);
+    } catch (error) {
+        console.error('Failed to fetch summary:', error);
+        toast({
+            variant: "destructive",
+            title: "Summarization Error",
+            description: "An unexpected error occurred while fetching the summary.",
+        });
+    } finally {
+        setLoadingSummary(false);
+        setSummaryFetched(true);
     }
   }, [article.content, summaryFetched, loadingSummary, toast]);
 
