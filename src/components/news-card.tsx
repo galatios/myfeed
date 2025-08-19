@@ -18,7 +18,7 @@ interface NewsCardProps {
   onToggleLike: () => void;
 }
 
-function VideoPlayer({ url }: { url: string }) {
+function VideoPlayer({ url }: { url:string }) {
     // Transform Yahoo Finance video page URL to embeddable URL
     const videoId = url.split('/').pop()?.split('.html')[0];
     if (!videoId) return null;
@@ -73,7 +73,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
     if (!commentsFetched) {
       fetchComments();
     }
-    setShowComments(!showComments);
+    setShowComments(true);
   };
 
   return (
