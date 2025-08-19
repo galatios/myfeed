@@ -45,7 +45,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <div className="relative h-48 w-full">
         <Image
           src="https://placehold.co/1200x400.png"
@@ -135,6 +135,6 @@ export default function ProfilePage() {
             </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

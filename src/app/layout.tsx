@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { Particles } from '@/components/particles';
+import { HeaderProvider } from '@/components/header-provider';
 
 export const metadata: Metadata = {
   title: 'MarketWatch Live',
@@ -22,7 +23,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased h-full">
         <Particles className="fixed inset-0 -z-10" />
-        {children}
+        <HeaderProvider>{children}</HeaderProvider>
         <Toaster />
       </body>
     </html>
