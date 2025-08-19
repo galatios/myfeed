@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CommentSection } from './comment-section';
-import { ThumbsUp, MessageSquare } from 'lucide-react';
+import { ThumbsUp, MessageSquare, PlayCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -17,6 +17,26 @@ interface NewsCardProps {
   isLiked: boolean;
   onToggleLike: () => void;
 }
+
+function VideoPlayer({ url }: { url: string }) {
+    // Transform Yahoo Finance video page URL to embeddable URL
+    const videoId = url.split('/').pop()?.split('.html')[0];
+    if (!videoId) return null;
+    const embedUrl = `https://www.yahoo.com/embed/video/${videoId}?format=embed&player_autoplay=false`;
+  
+    return (
+      <div className="aspect-video w-full">
+        <iframe
+          src={embedUrl}
+          width="100%"
+          height="100%"
+          allow="autoplay; fullscreen"
+          allowFullScreen
+          className="border-0"
+        ></iframe>
+      </div>
+    );
+  }
 
 export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
   const [aiComments, setAiComments] = useState<AIComment[]>([]);
@@ -70,6 +90,14 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
             <AvatarFallback>{getAvatarText(article.source)}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold hover:underline"
+            >
+              {article.title}
+            </a>
             <p className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(article.timestamp), {
                 addSuffix: true,
@@ -80,40 +108,26 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       </CardHeader>
 
       <CardContent className="p-0">
-        {!article.imageUrl && (
-          <p className="px-3 pb-3 text-sm">
-            <a
-              href={article.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold hover:underline"
-            >
-              {article.title}
-            </a>
-          </p>
-        )}
+        {article.isVideo ? (
+            <VideoPlayer url={article.link} />
+        ) : (
+            <>
+            {!article.imageUrl && (
+              <p className="px-3 pb-3 text-sm">{article.content}</p>
+            )}
 
-        {article.imageUrl && (
-          <div className="relative aspect-video w-full">
-            <Image
-              src={article.imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover"
-              data-ai-hint="article image"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            <a
-              href={article.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute bottom-0 left-0 w-full p-3"
-            >
-              <h2 className="text-lg font-bold text-white hover:underline">
-                {article.title}
-              </h2>
-            </a>
-          </div>
+            {article.imageUrl && (
+              <div className="relative aspect-video w-full">
+                <Image
+                  src={article.imageUrl}
+                  alt={article.title}
+                  fill
+                  className="object-cover"
+                  data-ai-hint="article image"
+                />
+              </div>
+            )}
+          </>
         )}
       </CardContent>
 

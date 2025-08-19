@@ -48,7 +48,8 @@ export async function fetchNewsAction(
         article.title.toLowerCase().includes(lowercasedTerm)
     );
   }
-  return articles;
+  // Add isVideo property
+  return articles.map(article => ({ ...article, isVideo: article.link.includes('video.yahoo.com')}));
 }
 
 export async function generateCommentsAction(

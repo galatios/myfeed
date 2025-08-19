@@ -6,6 +6,7 @@ export interface NewsArticle {
   source: string;
   timestamp: string;
   imageUrl?: string;
+  isVideo: boolean;
 }
 
 export interface AIComment {

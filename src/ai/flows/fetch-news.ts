@@ -20,6 +20,7 @@ const NewsArticleSchema = z.object({
   source: z.string(),
   timestamp: z.string().datetime(),
   imageUrl: z.string().url().optional(),
+  isVideo: z.boolean(),
 });
 
 const FetchNewsOutputSchema = z.object({
@@ -47,6 +48,7 @@ const fetchNewsFlow = ai.defineFlow(
         source: article.source,
         timestamp: article.timestamp,
         imageUrl: article.imageUrl,
+        isVideo: article.isVideo,
       })),
     };
   }
