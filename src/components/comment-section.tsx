@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Smile, Sticker } from 'lucide-react';
+import { Send, Smile } from 'lucide-react';
 import type { AIComment } from '@/lib/types';
 import { Skeleton } from './ui/skeleton';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -106,7 +106,7 @@ export function CommentSection({ aiComments, loading }: CommentSectionProps) {
             placeholder="Write a comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            className="rounded-full bg-secondary pr-28"
+            className="rounded-full bg-secondary pr-16"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-2">
             <Popover>
@@ -129,7 +129,6 @@ export function CommentSection({ aiComments, loading }: CommentSectionProps) {
                 </div>
               </PopoverContent>
             </Popover>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground"><Sticker className="h-4 w-4" /></Button>
           </div>
         </div>
 
