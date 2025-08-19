@@ -40,7 +40,7 @@ function VideoPlayer({ url }: { url:string }) {
   }
 
 export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
-  const [aiComment, setAiComment] = useState<AIComment | null>(null);
+  const [aiComments, setAiComments] = useState<AIComment[]>([]);
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [summaryFetched, setSummaryFetched] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -65,10 +65,10 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       setLoadingSummary(true);
       const result = await getSummaryAction(article.content);
       if(result.summary) {
-        setAiComment({
+        setAiComments([{
             username: 'MarketWatch AI',
             commentText: result.summary,
-        });
+        }]);
       } else if (result.error) {
         toast({
             variant: "destructive",
@@ -176,7 +176,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         <div className="px-3 pb-2">
           <Separator />
           <CommentSection 
-            aiComments={aiComment ? [aiComment] : []} 
+            aiComments={aiComments} 
             loading={loadingSummary} 
           />
         </div>
