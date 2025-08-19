@@ -38,8 +38,8 @@ export function NewsSidebar({ articles, likedArticles, onToggleLike, loading }: 
       <CardContent className="p-0">
         <ScrollArea className="h-[calc(100vh-12rem)] pr-4">
             <div className="space-y-1">
-            {loading ? <SidebarSkeleton /> : articles.map((article) => (
-                <div key={article.id} className="group relative rounded-lg hover:bg-secondary/50 p-2">
+            {loading ? <SidebarSkeleton /> : articles.map((article, index) => (
+                <div key={`${article.id}-${index}`} className="group relative rounded-lg hover:bg-secondary/50 p-2">
                     <a href={article.link} target="_blank" rel="noopener noreferrer" className="block">
                         <p className="text-sm font-semibold line-clamp-2">{article.title}</p>
                         <p className="text-xs text-muted-foreground">{article.source}</p>
