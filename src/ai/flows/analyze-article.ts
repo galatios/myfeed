@@ -60,7 +60,7 @@ const analyzeArticlePrompt = ai.definePrompt({
   prompt: `Analyze the following news article. Your task is to:
 1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its current price.
 2.  Generate a list of 3-5 key takeaways or bullet points.
-3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, Other.
+3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, General.
 4.  Analyze the overall sentiment of the article and classify it as Positive, Negative, or Neutral.
 
 Article Content:

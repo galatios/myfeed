@@ -10,7 +10,7 @@ import { SearchContext } from '@/components/header-provider';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const TOPICS = ['All', 'Technology', 'Finance', 'Geopolitics', 'Economy', 'Healthcare', 'Energy'];
+const TOPICS = ['All', 'Technology', 'Finance', 'Geopolitics', 'Economy', 'Healthcare', 'Energy', 'General'];
 
 function NewsSkeleton() {
   return (
