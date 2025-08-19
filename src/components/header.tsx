@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export function Header({ searchTerm, onSearchChange }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-20 w-full border-b bg-card shadow-sm">
+    <header className="sticky top-0 z-20 w-full border-b bg-card/50 backdrop-blur-lg shadow-sm">
       <div className="container flex h-14 items-center justify-between px-4">
         <div className="flex items-center space-x-2">
           <div className="relative md:block">

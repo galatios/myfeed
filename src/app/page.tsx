@@ -63,7 +63,7 @@ export default function Home() {
 
 
   return (
-    <div className="flex min-h-screen flex-col bg-secondary/70">
+    <div className="flex min-h-screen flex-col bg-transparent">
       <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <main className="flex-1">
         <div className="container mx-auto max-w-lg py-6">
