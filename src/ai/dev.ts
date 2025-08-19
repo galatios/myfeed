@@ -3,4 +3,3 @@ config();
 
 import '@/ai/flows/summarize-article.ts';
 import '@/ai/flows/fetch-news.ts';
-import '@/ai/flows/generate-comments.ts';

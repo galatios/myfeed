@@ -2,7 +2,6 @@
 
 import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { fetchNews } from '@/ai/flows/fetch-news';
-import { generateComments } from '@/ai/flows/generate-comments';
 import type { NewsArticle, AIComment } from '@/lib/types';
 
 export async function getSummaryAction(
@@ -50,20 +49,4 @@ export async function fetchNewsAction(
   }
   // Add isVideo property
   return articles.map(article => ({ ...article, isVideo: article.link.includes('video.yahoo.com')}));
-}
-
-export async function generateCommentsAction(
-  articleTitle: string,
-  articleContent: string
-): Promise<AIComment[]> {
-  try {
-    const result = await generateComments({
-      articleTitle,
-      articleContent,
-    });
-    return result.comments;
-  } catch (error) {
-    console.error('Error generating comments:', error);
-    return [];
-  }
 }

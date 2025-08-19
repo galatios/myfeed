@@ -9,8 +9,9 @@ import { ThumbsUp, MessageSquare, PlayCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
-import { generateCommentsAction } from '@/app/actions';
+import { getSummaryAction } from '@/app/actions';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -39,10 +40,11 @@ function VideoPlayer({ url }: { url:string }) {
   }
 
 export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
-  const [aiComments, setAiComments] = useState<AIComment[]>([]);
-  const [loadingComments, setLoadingComments] = useState(false);
-  const [commentsFetched, setCommentsFetched] = useState(false);
+  const [aiComment, setAiComment] = useState<AIComment | null>(null);
+  const [loadingSummary, setLoadingSummary] = useState(false);
+  const [summaryFetched, setSummaryFetched] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const { toast } = useToast();
 
   const getAvatarText = (source: string) => {
     const words = source.split(' ');
@@ -56,25 +58,33 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
     return source.substring(0, 2).toUpperCase();
   };
 
-  const fetchComments = useCallback(async () => {
-    if (commentsFetched || loadingComments) return;
+  const fetchSummary = useCallback(async () => {
+    if (summaryFetched || loadingSummary) return;
     
-    if (article.title && article.content) {
-      setLoadingComments(true);
-      const comments = await generateCommentsAction(
-        article.title,
-        article.content
-      );
-      setAiComments(comments);
-      setLoadingComments(false);
-      setCommentsFetched(true);
+    if (article.content) {
+      setLoadingSummary(true);
+      const result = await getSummaryAction(article.content);
+      if(result.summary) {
+        setAiComment({
+            username: 'MarketWatch AI',
+            commentText: result.summary,
+        });
+      } else if (result.error) {
+        toast({
+            variant: "destructive",
+            title: "Summarization Error",
+            description: result.error,
+        })
+      }
+      setLoadingSummary(false);
+      setSummaryFetched(true);
     }
-  }, [article.title, article.content, commentsFetched, loadingComments]);
+  }, [article.content, summaryFetched, loadingSummary, toast]);
 
   const handleCommentClick = () => {
     setShowComments((prev) => !prev);
-    if (!commentsFetched) {
-      fetchComments();
+    if (!summaryFetched) {
+      fetchSummary();
     }
   };
 
@@ -165,7 +175,10 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       {showComments && (
         <div className="px-3 pb-2">
           <Separator />
-          <CommentSection aiComments={aiComments} loading={loadingComments} />
+          <CommentSection 
+            aiComments={aiComment ? [aiComment] : []} 
+            loading={loadingSummary} 
+          />
         </div>
       )}
     </Card>
