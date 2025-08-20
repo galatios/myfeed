@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CommentSection } from './comment-section';
-import { ThumbsUp, Bot } from 'lucide-react';
+import { ThumbsUp, Bot, PlayCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -18,25 +18,6 @@ interface NewsCardProps {
   isLiked: boolean;
   onToggleLike: () => void;
 }
-
-function VideoPlayer({ url }: { url:string }) {
-    const videoId = url.split('/').pop()?.split('.html')[0];
-    if (!videoId) return null;
-    const embedUrl = `https://www.yahoo.com/embed/video/${videoId}?format=embed&player_autoplay=false`;
-  
-    return (
-      <div className="aspect-video w-full">
-        <iframe
-          src={embedUrl}
-          width="100%"
-          height="100%"
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          className="border-0"
-        ></iframe>
-      </div>
-    );
-  }
 
 export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -125,22 +106,21 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       </CardHeader>
 
       <CardContent className="p-0">
-        {article.isVideo ? (
-            <VideoPlayer url={article.link} />
-        ) : (
-            <>
-            {article.imageUrl && (
-              <div className="relative aspect-video w-full">
+        {article.imageUrl && (
+            <a href={article.link} target="_blank" rel="noopener noreferrer" className="relative block aspect-video w-full group">
                 <Image
-                  src={article.imageUrl}
-                  alt={article.title}
-                  fill
-                  className="object-cover"
-                  data-ai-hint="article image"
+                    src={article.imageUrl}
+                    alt={article.title}
+                    fill
+                    className="object-cover"
+                    data-ai-hint={article.isVideo ? "video thumbnail" : "article image"}
                 />
-              </div>
-            )}
-          </>
+                {article.isVideo && (
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100">
+                        <PlayCircle className="h-16 w-16 text-white/80" />
+                    </div>
+                )}
+            </a>
         )}
       </CardContent>
 
