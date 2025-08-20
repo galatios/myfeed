@@ -20,7 +20,7 @@ const SummarizeArticleInputSchema = z.object({
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
 const SummarizeArticleOutputSchema = z.object({
-  summary: z.string().describe('The summary of the news article.'),
+  summary: z.string().describe('A concise summary of the news article, containing the most important information.'),
 });
 export type SummarizeArticleOutput = z.infer<typeof SummarizeArticleOutputSchema>;
 
@@ -34,7 +34,7 @@ const prompt = ai.definePrompt({
   output: {schema: SummarizeArticleOutputSchema},
   prompt: `First, fetch the content from the following URL: {{{articleUrl}}}
 
-Then, summarize the news article in a concise manner.`,
+Then, provide a concise summary of the news article. The summary should be detailed enough to be used as context for further analysis.`,
 });
 
 const summarizeArticleFlow = ai.defineFlow(

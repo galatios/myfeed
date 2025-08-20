@@ -15,25 +15,34 @@ import { getMockStockPrice } from '@/services/stock-fetcher';
 
 // Define the schema for a stock ticker
 const TickerSchema = z.object({
-  symbol: z.string().describe('The stock ticker symbol, without the `$` prefix.'),
+  symbol: z
+    .string()
+    .describe('The stock ticker symbol, without the `$` prefix.'),
   price: z.number().describe('The current price of the stock.'),
 });
 
 // Input schema for the analysis flow
 const AnalyzeArticleInputSchema = z.object({
-  articleUrl: z
-    .string()
-    .url()
-    .describe('The URL of the news article to analyze.'),
+  articleContent: z.string().describe('The text content of the article.'),
 });
 export type AnalyzeArticleInput = z.infer<typeof AnalyzeArticleInputSchema>;
 
 // Output schema for the analysis flow
 const AnalyzeArticleOutputSchema = z.object({
-  tickers: z.array(TickerSchema).describe('An array of stock tickers found in the article.'),
-  keyTakeaways: z.array(z.string()).describe('A list of key takeaways from the article.'),
-  topic: z.string().describe('The main topic of the article (e.g., Technology, Finance, Healthcare).'),
-  sentiment: z.enum(['Positive', 'Negative', 'Neutral']).describe('The overall sentiment of the article.'),
+  tickers: z
+    .array(TickerSchema)
+    .describe('An array of stock tickers found in the article.'),
+  keyTakeaways: z
+    .array(z.string())
+    .describe('A list of key takeaways from the article.'),
+  topic: z
+    .string()
+    .describe(
+      'The main topic of the article (e.g., Technology, Finance, Healthcare).'
+    ),
+  sentiment: z
+    .enum(['Positive', 'Negative', 'Neutral'])
+    .describe('The overall sentiment of the article.'),
 });
 export type AnalyzeArticleOutput = z.infer<typeof AnalyzeArticleOutputSchema>;
 
@@ -58,10 +67,14 @@ const analyzeArticlePrompt = ai.definePrompt({
   input: { schema: AnalyzeArticleInputSchema },
   output: { schema: AnalyzeArticleOutputSchema },
   tools: [getStockPrice],
-  prompt: `First, fetch the content from the following URL: {{{articleUrl}}}
+  prompt: `Analyze the following news article content.
 
-Then, analyze the news article content. Your task is to:
-1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its current price.
+<article>
+{{{articleContent}}}
+</article>
+
+Your task is to:
+1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its current price. If no tickers are found, return an empty array.
 2.  Generate a list of 3-5 key takeaways or bullet points.
 3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, General.
 4.  Analyze the overall sentiment of the article and classify it as Positive, Negative, or Neutral.
@@ -81,6 +94,8 @@ const analyzeArticleFlow = ai.defineFlow(
   }
 );
 
-export async function analyzeArticle(input: AnalyzeArticleInput): Promise<AnalyzeArticleOutput> {
+export async function analyzeArticle(
+  input: AnalyzeArticleInput
+): Promise<AnalyzeArticleOutput> {
   return analyzeArticleFlow(input);
 }
