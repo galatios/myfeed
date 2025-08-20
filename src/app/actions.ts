@@ -52,7 +52,7 @@ export async function fetchNewsAction(
   // Analyze articles to get their topics
   const analyzedArticles = await Promise.all(articles.map(async (article) => {
     try {
-      if (article.content && article.content.trim().length > 100) {
+      if (article.content) {
         const analysis = await analyzeArticle({ articleContent: article.content });
         return { ...article, topic: analysis.topic || 'General', isVideo: article.link.includes('video.yahoo.com') };
       }
@@ -69,10 +69,10 @@ export async function fetchNewsAction(
 export async function analyzeArticleAction(
   content: string
 ): Promise<{ analysis: AnalysisResult | null; error: string | null }> {
-  if (!content || content.trim().length < 100) {
+  if (!content) {
     return {
       analysis: null,
-      error: 'Article content is too short for analysis.',
+      error: 'Article content is missing.',
     };
   }
 
