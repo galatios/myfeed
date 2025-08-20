@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export function Particles({
   className,
-  quantity = 30,
+  quantity = 15,
 }: {
   className?: string;
   quantity?: number;
@@ -21,9 +21,9 @@ export function Particles({
   useEffect(() => {
     const newCircles = Array.from({ length: quantity }).map(() => ({
       left: `${Math.floor(Math.random() * 100)}%`,
-      size: `${Math.floor(Math.random() * 4) + 1}px`,
+      size: `${Math.floor(Math.random() * 2) + 1}px`,
       animationDelay: `${Math.floor(Math.random() * 10)}s`,
-      animationDuration: `${Math.floor(Math.random() * 10) + 5}s`,
+      animationDuration: `${Math.floor(Math.random() * 5) + 3}s`,
     }));
     setCircles(newCircles);
   }, [quantity]);
