@@ -46,9 +46,9 @@ export async function fetchYahooFinanceNews(): Promise<NewsArticle[]> {
 
     const [articles, videos] = await Promise.all([articlePromise, videoPromise]);
 
-    // Simple deduplication based on title
     const articleTitles = new Set(articles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 
-    return [...articles, ...uniqueVideos];
+    const combined = [...articles, ...uniqueVideos];
+    return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
