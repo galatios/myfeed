@@ -1,6 +1,6 @@
 import Parser from 'rss-parser';
 import { NewsArticle } from '@/lib/types';
-import { getPublisherLogo } from '@/lib/publishers';
+import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
 
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
@@ -19,16 +19,14 @@ async function fetchFeed(url: string, isVideo: boolean = false): Promise<NewsArt
         const feed = await parser.parseURL(url);
         
         return feed.items.map((item) => {
-          // The 'creator' field often holds the original publisher name.
-          // Fallback to 'Yahoo Finance' if it's missing.
-          const source = item.creator || 'Yahoo Finance';
+          const link = item.link || '';
+          const source = getPublisherFromLink(link);
           
           return {
-            id: item.guid || item.link || '',
+            id: item.guid || link,
             title: item.title || 'No title',
-            link: item.link || '',
+            link: link,
             source: source,
-            // The getPublisherLogo function will now generate a Clearbit URL
             sourceLogoUrl: getPublisherLogo(source),
             timestamp: item.isoDate || new Date().toISOString(),
             imageUrl: item.mediaContent?.$?.url,
