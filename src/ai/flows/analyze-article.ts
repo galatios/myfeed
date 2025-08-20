@@ -21,9 +21,10 @@ const TickerSchema = z.object({
 
 // Input schema for the analysis flow
 const AnalyzeArticleInputSchema = z.object({
-  articleContent: z
+  articleUrl: z
     .string()
-    .describe('The content of the news article to analyze.'),
+    .url()
+    .describe('The URL of the news article to analyze.'),
 });
 export type AnalyzeArticleInput = z.infer<typeof AnalyzeArticleInputSchema>;
 
@@ -57,14 +58,13 @@ const analyzeArticlePrompt = ai.definePrompt({
   input: { schema: AnalyzeArticleInputSchema },
   output: { schema: AnalyzeArticleOutputSchema },
   tools: [getStockPrice],
-  prompt: `Analyze the following news article. Your task is to:
+  prompt: `First, fetch the content from the following URL: {{{articleUrl}}}
+
+Then, analyze the news article content. Your task is to:
 1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its current price.
 2.  Generate a list of 3-5 key takeaways or bullet points.
 3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, General.
 4.  Analyze the overall sentiment of the article and classify it as Positive, Negative, or Neutral.
-
-Article Content:
-{{{articleContent}}}
 `,
 });
 

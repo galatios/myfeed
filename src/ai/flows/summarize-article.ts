@@ -12,9 +12,10 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const SummarizeArticleInputSchema = z.object({
-  articleContent: z
+  articleUrl: z
     .string()
-    .describe('The content of the news article to summarize.'),
+    .url()
+    .describe('The URL of the news article to summarize.'),
 });
 export type SummarizeArticleInput = z.infer<typeof SummarizeArticleInputSchema>;
 
@@ -31,7 +32,9 @@ const prompt = ai.definePrompt({
   name: 'summarizeArticlePrompt',
   input: {schema: SummarizeArticleInputSchema},
   output: {schema: SummarizeArticleOutputSchema},
-  prompt: `Summarize the following news article in a concise manner:\n\n{{{articleContent}}}`,
+  prompt: `First, fetch the content from the following URL: {{{articleUrl}}}
+
+Then, summarize the news article in a concise manner.`,
 });
 
 const summarizeArticleFlow = ai.defineFlow(

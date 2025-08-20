@@ -58,11 +58,11 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
   };
 
   const fetchAnalysis = useCallback(async () => {
-    if (analysisFetched || loadingAnalysis || !article.content) return;
+    if (analysisFetched || loadingAnalysis || !article.link || article.isVideo) return;
     
     setLoadingAnalysis(true);
     try {
-      const analysisRes = await analyzeArticleAction(article.content);
+      const analysisRes = await analyzeArticleAction(article.link);
 
       if (analysisRes.analysis) {
         setAnalysisResult(analysisRes.analysis);
@@ -84,7 +84,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         setLoadingAnalysis(false);
         setAnalysisFetched(true);
     }
-  }, [article.content, analysisFetched, loadingAnalysis, toast]);
+  }, [article.link, article.isVideo, analysisFetched, loadingAnalysis, toast]);
 
   const handleAnalyzeClick = () => {
     setShowAnalysis((prev) => !prev);
@@ -129,10 +129,6 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
             <VideoPlayer url={article.link} />
         ) : (
             <>
-            {!article.imageUrl && article.content && (
-              <p className="px-3 pb-3 text-sm">{article.content.substring(0, 280)}...</p>
-            )}
-
             {article.imageUrl && (
               <div className="relative aspect-video w-full">
                 <Image
@@ -172,6 +168,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
           variant="ghost"
           className="w-full font-semibold text-muted-foreground"
           onClick={handleAnalyzeClick}
+          disabled={article.isVideo}
         >
           <Bot className="mr-2 h-5 w-5" />
           Analyze

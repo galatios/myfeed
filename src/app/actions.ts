@@ -6,17 +6,17 @@ import { analyzeArticle } from '@/ai/flows/analyze-article';
 import type { NewsArticle, AnalysisResult } from '@/lib/types';
 
 export async function getSummaryAction(
-  content: string
+  articleUrl: string
 ): Promise<{ summary: string | null; error: string | null }> {
-  if (!content || content.trim().length < 100) {
+  if (!articleUrl) {
     return {
       summary: null,
-      error: 'Article content is too short to provide a useful summary.',
+      error: 'Article URL is missing.',
     };
   }
 
   try {
-    const result = await summarizeArticle({ articleContent: content });
+    const result = await summarizeArticle({ articleUrl });
 
     if (result.summary && result.summary.split(' ').length > 10) {
       return { summary: result.summary, error: null };
@@ -52,8 +52,8 @@ export async function fetchNewsAction(
   // Analyze articles to get their topics
   const analyzedArticles = await Promise.all(articles.map(async (article) => {
     try {
-      if (article.content) {
-        const analysis = await analyzeArticle({ articleContent: article.content });
+      if (article.link && !article.isVideo) {
+        const analysis = await analyzeArticle({ articleUrl: article.link });
         return { ...article, topic: analysis.topic || 'General', isVideo: article.link.includes('video.yahoo.com') };
       }
       return { ...article, topic: 'General', isVideo: article.link.includes('video.yahoo.com') };
@@ -67,19 +67,19 @@ export async function fetchNewsAction(
 }
 
 export async function analyzeArticleAction(
-  content: string
+  articleUrl: string
 ): Promise<{ analysis: AnalysisResult | null; error: string | null }> {
-  if (!content) {
+  if (!articleUrl) {
     return {
       analysis: null,
-      error: 'Article content is missing.',
+      error: 'Article URL is missing.',
     };
   }
 
   try {
-    const result = await analyzeArticle({ articleContent: content });
+    const result = await analyzeArticle({ articleUrl });
     if (result) {
-      const summaryRes = await summarizeArticle({ articleContent: content });
+      const summaryRes = await summarizeArticle({ articleUrl });
       return { analysis: { ...result, summary: summaryRes.summary }, error: null };
     }
     return { analysis: null, error: 'Analysis failed to return a result.' };
