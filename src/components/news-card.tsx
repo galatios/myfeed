@@ -74,11 +74,12 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         });
       }
     } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
         console.error('Failed to fetch analysis:', error);
         toast({
             variant: "destructive",
             title: "Analysis Error",
-            description: "An unexpected error occurred while fetching the analysis.",
+            description: `An unexpected error occurred while fetching the analysis. Details: ${errorMessage}`,
         });
     } finally {
         setLoadingAnalysis(false);
@@ -99,8 +100,8 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         <div className="flex items-center space-x-3">
           <Avatar>
             <AvatarImage
-              src="https://s.yimg.com/cv/apiv2/social/images/yahoo_finance_en-US_h_p_finance.png"
-              alt="Yahoo Finance Logo"
+              src={article.sourceLogoUrl}
+              alt={`${article.source} Logo`}
               data-ai-hint="source logo"
             />
             <AvatarFallback>{getAvatarText(article.source)}</AvatarFallback>
@@ -115,7 +116,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
               {article.title}
             </a>
             <p className="text-xs text-muted-foreground">
-              {formatDistanceToNow(new Date(article.timestamp), {
+              {article.source} &middot; {formatDistanceToNow(new Date(article.timestamp), {
                 addSuffix: true,
               })}
             </p>
@@ -167,7 +168,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
           variant="ghost"
           className="w-full font-semibold text-muted-foreground"
           onClick={handleAnalyzeClick}
-          disabled={article.isVideo || !article.link || article.link.includes('video.yahoo.com')}
+          disabled={article.isVideo || !article.link || article.link.includes('video.yahoo.com') || article.link.includes('embed/video')}
         >
           <Bot className="mr-2 h-5 w-5" />
           Analyze

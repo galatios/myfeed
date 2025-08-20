@@ -4,12 +4,16 @@ import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { fetchNews } from '@/ai/flows/fetch-news';
 import { analyzeArticle } from '@/ai/flows/analyze-article';
 import type { NewsArticle, AnalysisResult } from '@/lib/types';
+import { getPublisherLogo } from '@/lib/publishers';
 
 export async function fetchNewsAction(
   searchTerm?: string
 ): Promise<NewsArticle[]> {
   const result = await fetchNews();
-  let articles = result.articles;
+  let articles = result.articles.map(article => ({
+      ...article,
+      sourceLogoUrl: getPublisherLogo(article.source),
+  }));
 
   if (searchTerm) {
     const lowercasedTerm = searchTerm.toLowerCase();

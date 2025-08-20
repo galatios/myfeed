@@ -3,6 +3,7 @@ export interface NewsArticle {
   title: string;
   link: string;
   source: string;
+  sourceLogoUrl?: string;
   timestamp: string;
   imageUrl?: string;
   isVideo: boolean;
