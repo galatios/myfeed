@@ -19,12 +19,16 @@ async function fetchFeed(url: string, isVideo: boolean = false): Promise<NewsArt
         const feed = await parser.parseURL(url);
         
         return feed.items.map((item) => {
+          // The 'creator' field often holds the original publisher name.
+          // Fallback to 'Yahoo Finance' if it's missing.
           const source = item.creator || 'Yahoo Finance';
+          
           return {
             id: item.guid || item.link || '',
             title: item.title || 'No title',
             link: item.link || '',
             source: source,
+            // The getPublisherLogo function will now generate a Clearbit URL
             sourceLogoUrl: getPublisherLogo(source),
             timestamp: item.isoDate || new Date().toISOString(),
             imageUrl: item.mediaContent?.$?.url,
@@ -44,6 +48,7 @@ export async function fetchYahooFinanceNews(): Promise<NewsArticle[]> {
 
     const [articles, videos] = await Promise.all([articlePromise, videoPromise]);
 
+    // Simple deduplication based on title
     const articleTitles = new Set(articles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 

@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
         hostname: 's.yimg.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'logo.clearbit.com',
+        pathname: '/**',
+      }
     ],
   },
 };
