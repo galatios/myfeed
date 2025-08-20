@@ -99,9 +99,8 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
         <div className="flex items-center space-x-3">
           <Avatar>
             <AvatarImage
-              src={`https://placehold.co/40x40.png?text=${getAvatarText(
-                article.source
-              )}`}
+              src="https://s.yimg.com/cv/apiv2/social/images/yahoo_finance_en-US_h_p_finance.png"
+              alt="Yahoo Finance Logo"
               data-ai-hint="source logo"
             />
             <AvatarFallback>{getAvatarText(article.source)}</AvatarFallback>
