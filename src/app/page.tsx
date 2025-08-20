@@ -96,8 +96,8 @@ export default function Home() {
     <main className="flex-1">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-8 py-6">
         <NewsSidebar articles={news} likedArticles={likedArticles} onToggleLike={toggleLike} loading={loading} />
-        <div className="max-w-lg mx-auto w-full">
-          <div className="space-y-4">
+        <div className="w-full">
+          <div className="space-y-4 max-w-lg mx-auto">
             {loading ? (
               <NewsSkeleton />
             ) : (
