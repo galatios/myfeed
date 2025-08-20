@@ -15,7 +15,6 @@ import { fetchYahooFinanceNews } from '@/services/news-fetcher';
 const NewsArticleSchema = z.object({
   id: z.string(),
   title: z.string(),
-  content: z.string(),
   link: z.string(),
   source: z.string(),
   timestamp: z.string().datetime(),
@@ -43,7 +42,6 @@ const fetchNewsFlow = ai.defineFlow(
       articles: articles.map((article) => ({
         id: article.id,
         title: article.title,
-        content: article.content,
         link: article.link,
         source: article.source,
         timestamp: article.timestamp,
