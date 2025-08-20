@@ -168,7 +168,7 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
           variant="ghost"
           className="w-full font-semibold text-muted-foreground"
           onClick={handleAnalyzeClick}
-          disabled={article.isVideo}
+          disabled={article.isVideo || !article.link || article.link.includes('video.yahoo.com')}
         >
           <Bot className="mr-2 h-5 w-5" />
           Analyze
