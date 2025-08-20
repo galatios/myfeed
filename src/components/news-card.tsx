@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CommentSection } from './comment-section';
-import { ThumbsUp, Bot, PlayCircle } from 'lucide-react';
+import { ThumbsUp, Bot } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from './ui/separator';
@@ -17,6 +17,25 @@ interface NewsCardProps {
   article: NewsArticle;
   isLiked: boolean;
   onToggleLike: () => void;
+}
+
+function VideoPlayer({ src }: { src: string }) {
+    // Extract video ID from Yahoo's embed URL
+    const videoId = src.split('/').pop()?.split('?')[0];
+    const embedUrl = `https://www.yahoo.com/embed/video/${videoId}`;
+
+    return (
+        <div className="aspect-video w-full">
+            <iframe
+                src={embedUrl}
+                width="100%"
+                height="100%"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                className="border-0"
+            ></iframe>
+        </div>
+    )
 }
 
 export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
@@ -106,22 +125,19 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       </CardHeader>
 
       <CardContent className="p-0">
-        {article.imageUrl && (
-            <a href={article.link} target="_blank" rel="noopener noreferrer" className="relative block aspect-video w-full group">
+        {article.isVideo && article.link ? (
+            <VideoPlayer src={article.link} />
+        ) : article.imageUrl ? (
+            <div className="relative aspect-video w-full">
                 <Image
                     src={article.imageUrl}
                     alt={article.title}
                     fill
                     className="object-cover"
-                    data-ai-hint={article.isVideo ? "video thumbnail" : "article image"}
+                    data-ai-hint="article image"
                 />
-                {article.isVideo && (
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100">
-                        <PlayCircle className="h-16 w-16 text-white/80" />
-                    </div>
-                )}
-            </a>
-        )}
+            </div>
+        ) : null}
       </CardContent>
 
       <div className="px-3 pb-1 pt-2">
