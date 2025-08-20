@@ -85,9 +85,10 @@ export async function analyzeArticleAction(
     return { analysis: null, error: 'Analysis failed to return a result.' };
   } catch (e) {
     console.error('Error in analyzeArticleAction:', e);
+    const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
     return {
       analysis: null,
-      error: 'Failed to analyze article due to an unexpected error.',
+      error: `Failed to analyze article. The AI may have been unable to access or process the content from the source URL. Error: ${errorMessage}`,
     };
   }
 }
