@@ -46,7 +46,7 @@ function NewsSkeleton() {
 export default function Home() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const { searchTerm } = useContext(SearchContext);
+  const { searchTerm, view } = useContext(SearchContext);
   const [likedArticles, setLikedArticles] = useState<Set<string>>(new Set());
 
   const toggleLike = (articleId: string) => {
@@ -61,9 +61,9 @@ export default function Home() {
     });
   };
 
-  const getNews = useCallback(async (term: string) => {
+  const getNews = useCallback(async () => {
     setLoading(true);
-    const fetchedNews = await fetchNewsAction(term);
+    const fetchedNews = await fetchNewsAction();
     fetchedNews.sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
@@ -72,17 +72,24 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    getNews(searchTerm);
-  }, [searchTerm, getNews]);
+    getNews();
+  }, [getNews]);
 
   const filteredNews = useMemo(() => {
-    if (!searchTerm) {
-      return news;
+    let newsToFilter = news;
+
+    if (view === 'videos') {
+      newsToFilter = newsToFilter.filter(item => item.isVideo);
     }
-    return news.filter((article) =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [news, searchTerm]);
+    
+    if (searchTerm) {
+      newsToFilter = newsToFilter.filter((article) =>
+        article.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    return newsToFilter;
+  }, [news, searchTerm, view]);
 
 
   return (
