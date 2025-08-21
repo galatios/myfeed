@@ -46,7 +46,7 @@ async function fetchNasdaqFeed(): Promise<NewsArticle[]> {
     const feed = await parser.parseURL(NASDAQ_PRESS_RELEASES_URL);
     return feed.items.map((item) => {
       const link = item.link || '';
-      const source = 'NASDAQ';
+      const source = item.creator || 'NASDAQ'; // Default to NASDAQ
       return {
         id: item.guid || link,
         title: item.title || 'No title',

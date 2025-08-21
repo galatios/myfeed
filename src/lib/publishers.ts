@@ -36,6 +36,7 @@ const publisherDomains: Record<string, string> = {
     'FreightWaves': 'freightwaves.com',
     'freightwaves.com': 'freightwaves.com',
     'NASDAQ': 'nasdaq.com',
+    'GlobeNewswire via COMTEX': 'globenewswire.com',
 };
 
 const domainToPublisher: Record<string, string> = Object.fromEntries(
@@ -45,7 +46,12 @@ const domainToPublisher: Record<string, string> = Object.fromEntries(
 export function getPublisherFromLink(link: string): string | undefined {
     try {
         const url = new URL(link);
-        const hostname = url.hostname;
+        let hostname = url.hostname;
+
+        // Strip "www." if it exists
+        if (hostname.startsWith('www.')) {
+            hostname = hostname.substring(4);
+        }
         
         // Match hostname directly e.g. finance.yahoo.com
         if (domainToPublisher[hostname]) {
@@ -54,10 +60,13 @@ export function getPublisherFromLink(link: string): string | undefined {
 
         // Match root domain e.g. fool.com from www.fool.com
         const parts = hostname.split('.');
-        const rootDomain = parts.slice(-2).join('.');
-        if (domainToPublisher[rootDomain]) {
-            return domainToPublisher[rootDomain];
+        if (parts.length > 2) {
+            const rootDomain = parts.slice(-2).join('.');
+             if (domainToPublisher[rootDomain]) {
+                return domainToPublisher[rootDomain];
+            }
         }
+       
 
     } catch (e) {
         // Invalid URL, fallback
