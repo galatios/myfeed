@@ -35,13 +35,14 @@ const publisherDomains: Record<string, string> = {
     'Offshore Technology': 'offshore-technology.com',
     'FreightWaves': 'freightwaves.com',
     'freightwaves.com': 'freightwaves.com',
+    'NASDAQ': 'nasdaq.com',
 };
 
 const domainToPublisher: Record<string, string> = Object.fromEntries(
     Object.entries(publisherDomains).map(([name, domain]) => [domain, name])
 );
 
-export function getPublisherFromLink(link: string): string {
+export function getPublisherFromLink(link: string): string | undefined {
     try {
         const url = new URL(link);
         const hostname = url.hostname;
@@ -61,7 +62,7 @@ export function getPublisherFromLink(link: string): string {
     } catch (e) {
         // Invalid URL, fallback
     }
-    return 'Yahoo Finance'; // Fallback
+    return undefined; // Fallback
 }
 
 

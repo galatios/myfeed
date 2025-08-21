@@ -9,7 +9,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { fetchYahooFinanceNews } from '@/services/news-fetcher';
+import { fetchAllNews } from '@/services/news-fetcher';
 
 // Define the schema for a single news article
 const NewsArticleSchema = z.object({
@@ -37,7 +37,7 @@ const fetchNewsFlow = ai.defineFlow(
     outputSchema: FetchNewsOutputSchema,
   },
   async () => {
-    const articles = await fetchYahooFinanceNews();
+    const articles = await fetchAllNews();
     return {
       articles: articles.map((article) => ({
         id: article.id,

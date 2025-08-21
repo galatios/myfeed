@@ -4,6 +4,7 @@ import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
 
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
+const NASDAQ_PRESS_RELEASES_URL = 'https://asset.nasdaq.com/rss/news/news-releases.xml';
 
 const parser = new Parser({
   customFields: {
@@ -14,13 +15,13 @@ const parser = new Parser({
   },
 });
 
-async function fetchFeed(url: string, isVideo: boolean = false): Promise<NewsArticle[]> {
+async function fetchYahooFeed(url: string, isVideo: boolean = false): Promise<NewsArticle[]> {
     try {
         const feed = await parser.parseURL(url);
         
         return feed.items.map((item) => {
           const link = item.link || '';
-          const source = getPublisherFromLink(link);
+          const source = getPublisherFromLink(link) || item.creator || 'Yahoo Finance';
           
           return {
             id: item.guid || link,
@@ -40,15 +41,40 @@ async function fetchFeed(url: string, isVideo: boolean = false): Promise<NewsArt
       }
 }
 
-export async function fetchYahooFinanceNews(): Promise<NewsArticle[]> {
-    const articlePromise = fetchFeed(YAHOO_FINANCE_STORIES_RSS_URL, false);
-    const videoPromise = fetchFeed(YAHOO_FINANCE_VIDEOS_RSS_URL, true);
+async function fetchNasdaqFeed(): Promise<NewsArticle[]> {
+  try {
+    const feed = await parser.parseURL(NASDAQ_PRESS_RELEASES_URL);
+    return feed.items.map((item) => {
+      const link = item.link || '';
+      const source = 'NASDAQ';
+      return {
+        id: item.guid || link,
+        title: item.title || 'No title',
+        link,
+        source,
+        sourceLogoUrl: getPublisherLogo(source),
+        timestamp: item.isoDate || new Date().toISOString(),
+        isVideo: false,
+      };
+    }).filter(item => item.id);
+  } catch (error) {
+    console.error(`Error fetching or parsing RSS feed from ${NASDAQ_PRESS_RELEASES_URL}:`, error);
+    return [];
+  }
+}
 
-    const [articles, videos] = await Promise.all([articlePromise, videoPromise]);
+export async function fetchAllNews(): Promise<NewsArticle[]> {
+    const yahooArticlePromise = fetchYahooFeed(YAHOO_FINANCE_STORIES_RSS_URL, false);
+    const videoPromise = fetchYahooFeed(YAHOO_FINANCE_VIDEOS_RSS_URL, true);
+    const nasdaqPromise = fetchNasdaqFeed();
 
-    const articleTitles = new Set(articles.map(a => a.title));
+    const [yahooArticles, videos, nasdaqArticles] = await Promise.all([yahooArticlePromise, videoPromise, nasdaqPromise]);
+
+    const combinedArticles = [...yahooArticles, ...nasdaqArticles];
+
+    const articleTitles = new Set(combinedArticles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 
-    const combined = [...articles, ...uniqueVideos];
+    const combined = [...combinedArticles, ...uniqueVideos];
     return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
