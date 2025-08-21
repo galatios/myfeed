@@ -80,6 +80,9 @@ export default function Home() {
 
     if (view === 'videos') {
       newsToFilter = newsToFilter.filter(item => item.isVideo);
+    } else if (view === 'home') {
+      // In home view, we want articles, not videos
+      newsToFilter = newsToFilter.filter(item => !item.isVideo);
     }
     
     if (searchTerm) {
@@ -97,7 +100,7 @@ export default function Home() {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-8 py-6">
         <NewsSidebar articles={news} likedArticles={likedArticles} onToggleLike={toggleLike} loading={loading} />
         <div className="w-full">
-          <div className="space-y-4 max-w-lg mx-auto">
+          <div className="space-y-4">
             {loading ? (
               <NewsSkeleton />
             ) : (
