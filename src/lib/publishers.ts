@@ -39,26 +39,34 @@ const publisherDomains: Record<string, string> = {
     'GlobeNewswire via COMTEX': 'globenewswire.com',
 };
 
-const domainToPublisher: Record<string, string> = Object.fromEntries(
-    Object.entries(publisherDomains).map(([name, domain]) => [domain, name])
-);
+// Create a reverse map from domain to a canonical publisher name.
+const domainToPublisher: Record<string, string> = {};
+for (const name in publisherDomains) {
+    const domain = publisherDomains[name];
+    if (!domainToPublisher[domain]) {
+        // Prefer shorter names for canonical representation e.g. 'Bloomberg' over 'Bloomberg.com'
+        domainToPublisher[domain] = Object.keys(publisherDomains).find(n => publisherDomains[n] === domain) || name;
+    }
+}
+
 
 export function getPublisherFromLink(link: string): string | undefined {
+    if (!link) return undefined;
     try {
         const url = new URL(link);
         let hostname = url.hostname;
-
+        
         // Strip "www." if it exists
         if (hostname.startsWith('www.')) {
             hostname = hostname.substring(4);
         }
         
-        // Match hostname directly e.g. finance.yahoo.com
+        // Direct match (e.g., 'finance.yahoo.com')
         if (domainToPublisher[hostname]) {
             return domainToPublisher[hostname];
         }
 
-        // Match root domain e.g. fool.com from www.fool.com
+        // Root domain match (e.g., 'wsj.com' from 'video.wsj.com')
         const parts = hostname.split('.');
         if (parts.length > 2) {
             const rootDomain = parts.slice(-2).join('.');
@@ -66,12 +74,10 @@ export function getPublisherFromLink(link: string): string | undefined {
                 return domainToPublisher[rootDomain];
             }
         }
-       
-
     } catch (e) {
-        // Invalid URL, fallback
+        console.error(`Could not parse publisher from link: ${link}`, e);
     }
-    return undefined; // Fallback
+    return undefined;
 }
 
 
@@ -81,7 +87,7 @@ export function getPublisherFromLink(link: string): string | undefined {
  * @returns The Clearbit logo URL, or undefined if the domain is not found.
  */
 export function getPublisherLogo(publisherName: string): string | undefined {
-    // Some publisher names in the feed have extra text, like 'From Barrons.com'.
+    // Some publisher names in the feed have extra text.
     // We try to find a known publisher name within the provided string.
     const knownPublisher = Object.keys(publisherDomains).find(p => publisherName.includes(p));
     

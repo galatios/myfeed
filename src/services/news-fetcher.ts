@@ -33,7 +33,7 @@ async function fetchYahooFeed(url: string, isVideo: boolean = false): Promise<Ne
             imageUrl: item.mediaContent?.$?.url,
             isVideo,
           };
-        }).filter(item => item.id);
+        }).filter(item => item.id && item.link);
     
       } catch (error) {
         console.error(`Error fetching or parsing RSS feed from ${url}:`, error);
@@ -46,7 +46,8 @@ async function fetchNasdaqFeed(): Promise<NewsArticle[]> {
     const feed = await parser.parseURL(NASDAQ_PRESS_RELEASES_URL);
     return feed.items.map((item) => {
       const link = item.link || '';
-      const source = item.creator || 'NASDAQ'; // Default to NASDAQ
+      // The 'creator' field is often the most reliable source for NASDAQ feed
+      const source = item.creator || getPublisherFromLink(link) || 'NASDAQ';
       return {
         id: item.guid || link,
         title: item.title || 'No title',
@@ -56,7 +57,7 @@ async function fetchNasdaqFeed(): Promise<NewsArticle[]> {
         timestamp: item.isoDate || new Date().toISOString(),
         isVideo: false,
       };
-    }).filter(item => item.id);
+    }).filter(item => item.id && item.link);
   } catch (error) {
     console.error(`Error fetching or parsing RSS feed from ${NASDAQ_PRESS_RELEASES_URL}:`, error);
     return [];
