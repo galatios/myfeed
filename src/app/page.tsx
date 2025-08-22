@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { NewsSidebar } from '@/components/news-sidebar';
 import { SearchContext } from '@/components/header-provider';
+import { publisherDomains } from '@/lib/publishers';
 
 function NewsSkeleton() {
   return (
@@ -43,6 +44,8 @@ function NewsSkeleton() {
   );
 }
 
+const nasdaqSources = new Set(['NASDAQ', 'GlobeNewswire', 'GlobeNewswire via COMTEX', 'Business Wire', 'PR Newswire']);
+
 export default function Home() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,10 +81,9 @@ export default function Home() {
   const filteredNews = useMemo(() => {
     let newsToFilter = news;
 
-    if (view === 'videos') {
-      newsToFilter = newsToFilter.filter(item => item.isVideo);
+    if (view === 'nasdaq') {
+      newsToFilter = newsToFilter.filter(item => nasdaqSources.has(item.source));
     } else if (view === 'home') {
-      // In home view, we want articles, not videos
       newsToFilter = newsToFilter.filter(item => !item.isVideo);
     }
     

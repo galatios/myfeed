@@ -1,4 +1,4 @@
-import { Home, Bell, MessageSquare, Video, Search } from 'lucide-react';
+import { Home, Bell, MessageSquare, Newspaper, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -54,11 +54,11 @@ export function Header({ searchTerm, onSearchChange, view, onViewChange }: Heade
                 size="icon" 
                 className={cn(
                     "h-12 w-24 rounded-none",
-                    view === 'videos' ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
+                    view === 'nasdaq' ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
                 )}
-                onClick={() => onViewChange('videos')}
+                onClick={() => onViewChange('nasdaq')}
             >
-                <Video className="h-7 w-7" />
+                <Newspaper className="h-7 w-7" />
             </Button>
         </div>
 

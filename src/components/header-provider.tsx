@@ -2,7 +2,7 @@
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 import { Header } from "./header";
 
-export type FeedView = 'home' | 'videos';
+export type FeedView = 'home' | 'nasdaq';
 
 export const SearchContext = createContext({
     searchTerm: '',
