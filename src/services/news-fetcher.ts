@@ -1,7 +1,7 @@
 
 import Parser from 'rss-parser';
 import { NewsArticle } from '@/lib/types';
-import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
+import { getPublisherLogo, getPublisherFromLink, nasdaqSources } from '@/lib/publishers';
 
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
@@ -47,7 +47,6 @@ async function fetchNasdaqFeed(): Promise<NewsArticle[]> {
     const feed = await parser.parseURL(NASDAQ_PRESS_RELEASES_URL);
     return feed.items.map((item) => {
       const link = item.link || '';
-      // The 'creator' field is often the most reliable source for NASDAQ feed
       const source = item.creator || getPublisherFromLink(link) || 'NASDAQ';
       return {
         id: item.guid || link,
@@ -65,18 +64,31 @@ async function fetchNasdaqFeed(): Promise<NewsArticle[]> {
   }
 }
 
-export async function fetchAllNews(): Promise<NewsArticle[]> {
+export async function fetchHomeNews(): Promise<NewsArticle[]> {
     const yahooArticlePromise = fetchYahooFeed(YAHOO_FINANCE_STORIES_RSS_URL, false);
     const videoPromise = fetchYahooFeed(YAHOO_FINANCE_VIDEOS_RSS_URL, true);
-    const nasdaqPromise = fetchNasdaqFeed();
 
-    const [yahooArticles, videos, nasdaqArticles] = await Promise.all([yahooArticlePromise, videoPromise, nasdaqPromise]);
+    const [yahooArticles, videos] = await Promise.all([yahooArticlePromise, videoPromise]);
+    
+    // Filter out any nasdaq related articles from yahoo feed if any
+    const nonNasdaqArticles = yahooArticles.filter(a => !nasdaqSources.has(a.source));
 
-    const combinedArticles = [...yahooArticles, ...nasdaqArticles];
-
-    const articleTitles = new Set(combinedArticles.map(a => a.title));
+    const articleTitles = new Set(nonNasdaqArticles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 
-    const combined = [...combinedArticles, ...uniqueVideos];
+    const combined = [...nonNasdaqArticles, ...uniqueVideos];
+    return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+}
+
+export async function fetchNasdaqNews(): Promise<NewsArticle[]> {
+    const nasdaqArticles = await fetchNasdaqFeed();
+    return nasdaqArticles.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+}
+
+export async function fetchAllNews(): Promise<NewsArticle[]> {
+    const homeNewsPromise = fetchHomeNews();
+    const nasdaqNewsPromise = fetchNasdaqNews();
+    const [homeNews, nasdaqNews] = await Promise.all([homeNewsPromise, nasdaqNewsPromise]);
+    const combined = [...homeNews, ...nasdaqNews];
     return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }

@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback, useContext, useMemo } from 'react';
 import { NewsCard } from '@/components/news-card';
 import { type NewsArticle } from '@/lib/types';
-import { fetchNewsAction } from '@/app/actions';
+import { fetchAllNewsAction } from '@/app/actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { NewsSidebar } from '@/components/news-sidebar';
 import { SearchContext } from '@/components/header-provider';
+import { nasdaqSources } from '@/lib/publishers';
 
 function NewsSkeleton() {
   return (
@@ -44,10 +45,8 @@ function NewsSkeleton() {
   );
 }
 
-const nasdaqSources = new Set(['NASDAQ', 'GlobeNewswire', 'GlobeNewswire via COMTEX', 'Business Wire', 'PR Newswire']);
-
 export default function Home() {
-  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [allNews, setAllNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const { searchTerm, view } = useContext(SearchContext);
   const [likedArticles, setLikedArticles] = useState<Set<string>>(new Set());
@@ -66,11 +65,8 @@ export default function Home() {
 
   const getNews = useCallback(async () => {
     setLoading(true);
-    const fetchedNews = await fetchNewsAction();
-    fetchedNews.sort(
-      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    );
-    setNews(fetchedNews);
+    const fetchedNews = await fetchAllNewsAction();
+    setAllNews(fetchedNews);
     setLoading(false);
   }, []);
 
@@ -79,12 +75,12 @@ export default function Home() {
   }, [getNews]);
 
   const filteredNews = useMemo(() => {
-    let newsToFilter = news;
+    let newsToFilter = allNews;
 
-    if (view === 'nasdaq') {
-      newsToFilter = newsToFilter.filter(item => nasdaqSources.has(item.source));
-    } else if (view === 'home') {
+    if (view === 'home') {
       newsToFilter = newsToFilter.filter(item => !nasdaqSources.has(item.source) && !item.isVideo);
+    } else if (view === 'nasdaq') {
+      newsToFilter = newsToFilter.filter(item => nasdaqSources.has(item.source));
     }
     
     if (searchTerm) {
@@ -95,13 +91,13 @@ export default function Home() {
     }
 
     return newsToFilter;
-  }, [news, searchTerm, view]);
+  }, [allNews, searchTerm, view]);
 
 
   return (
     <main className="flex-1">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-8 py-6">
-        <NewsSidebar articles={news} likedArticles={likedArticles} onToggleLike={toggleLike} loading={loading} />
+        <NewsSidebar articles={allNews} likedArticles={likedArticles} onToggleLike={toggleLike} loading={loading} />
         <div className="w-full">
           <div className="space-y-4">
             {loading ? (

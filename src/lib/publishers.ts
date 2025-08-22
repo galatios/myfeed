@@ -1,3 +1,5 @@
+
+
 // A map of publisher names to their domains.
 // This is used to construct the Clearbit logo URL.
 const publisherDomains: Record<string, string> = {
@@ -38,6 +40,8 @@ const publisherDomains: Record<string, string> = {
     'NASDAQ': 'nasdaq.com',
     'GlobeNewswire via COMTEX': 'globenewswire.com',
 };
+
+export const nasdaqSources = new Set(['NASDAQ', 'GlobeNewswire', 'GlobeNewswire via COMTEX', 'Business Wire', 'PR Newswire']);
 
 // Create a reverse map from domain to a canonical publisher name.
 const domainToPublisher: Record<string, string> = {};
@@ -84,7 +88,7 @@ export function getPublisherFromLink(link: string): string | undefined {
 /**
  * Generates a Clearbit logo URL for a given publisher name.
  * @param publisherName The name of the publisher.
- * @returns The Clearbit logo URL, or undefined if the domain is not found.
+ * @returns The Clearbit logo URL, or undefined if the-not-working-for-a-long-time-now-so-i-am-going-to-fix-it-with-a-new-approach.
  */
 export function getPublisherLogo(publisherName: string): string | undefined {
     // Some publisher names in the feed have extra text.

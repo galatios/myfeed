@@ -1,20 +1,16 @@
+
 'use server';
 
 import { summarizeArticle } from '@/ai/flows/summarize-article';
-import { fetchNews } from '@/ai/flows/fetch-news';
 import { analyzeArticle } from '@/ai/flows/analyze-article';
 import type { NewsArticle, AnalysisResult } from '@/lib/types';
-import { getPublisherLogo } from '@/lib/publishers';
+import { fetchAllNews } from '@/services/news-fetcher';
 
-export async function fetchNewsAction(
+export async function fetchAllNewsAction(
   searchTerm?: string
 ): Promise<NewsArticle[]> {
-  const result = await fetchNews();
-  let articles = result.articles.map(article => ({
-      ...article,
-      sourceLogoUrl: getPublisherLogo(article.source),
-  }));
-
+  let articles = await fetchAllNews();
+  
   if (searchTerm) {
     const lowercasedTerm = searchTerm.toLowerCase();
     articles = articles.filter(
@@ -25,6 +21,7 @@ export async function fetchNewsAction(
   
   return articles;
 }
+
 
 export async function analyzeArticleAction(
   articleUrl: string
