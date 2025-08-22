@@ -82,14 +82,15 @@ export default function Home() {
     let newsToFilter = news;
 
     if (view === 'nasdaq') {
-      newsToFilter = news.filter(item => nasdaqSources.has(item.source));
+      newsToFilter = newsToFilter.filter(item => nasdaqSources.has(item.source));
     } else if (view === 'home') {
-      newsToFilter = news.filter(item => !nasdaqSources.has(item.source) && !item.isVideo);
+      newsToFilter = newsToFilter.filter(item => !nasdaqSources.has(item.source) && !item.isVideo);
     }
     
     if (searchTerm) {
+      const lowercasedTerm = searchTerm.toLowerCase();
       newsToFilter = newsToFilter.filter((article) =>
-        article.title.toLowerCase().includes(searchTerm.toLowerCase())
+        article.title.toLowerCase().includes(lowercasedTerm)
       );
     }
 
