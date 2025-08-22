@@ -82,9 +82,9 @@ export default function Home() {
     let newsToFilter = news;
 
     if (view === 'nasdaq') {
-      newsToFilter = newsToFilter.filter(item => nasdaqSources.has(item.source));
+      newsToFilter = news.filter(item => nasdaqSources.has(item.source));
     } else if (view === 'home') {
-      newsToFilter = newsToFilter.filter(item => !item.isVideo);
+      newsToFilter = news.filter(item => !nasdaqSources.has(item.source) && !item.isVideo);
     }
     
     if (searchTerm) {
