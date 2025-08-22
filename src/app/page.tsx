@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect, useCallback, useContext, useMemo } from 'react';
 import { NewsCard } from '@/components/news-card';
@@ -7,7 +8,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { NewsSidebar } from '@/components/news-sidebar';
 import { SearchContext } from '@/components/header-provider';
-import { publisherDomains } from '@/lib/publishers';
 
 function NewsSkeleton() {
   return (
