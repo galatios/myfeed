@@ -9,7 +9,7 @@ This application was developed iteratively through a conversation-driven process
 1.  **Initial Setup**: The application began as a standard Next.js starter project with TypeScript, Tailwind CSS, and ShadCN UI components.
 
 2.  **Core News Feed**:
-    *   An RSS parser was implemented in `src/services/news-fetcher.ts` to fetch top stories and videos from the Yahoo Finance RSS feed.
+    *   An RSS parser was implemented in `src/services/news-fetcher.ts` to fetch top stories and videos from the Yahoo Finance RSS feed and press releases from the NASDAQ feed.
     *   A `NewsCard` component (`src/components/news-card.tsx`) was created to display each article, including its title, image, and source.
     *   A `NewsSidebar` (`src/components/news-sidebar.tsx`) was added to show a list of trending articles.
 
@@ -29,63 +29,34 @@ This application was developed iteratively through a conversation-driven process
 
 This combination of a real-time news feed and powerful AI analysis creates a rich, interactive experience for users interested in financial markets.
 
-## Migrating to a New Project
+## Prompt to Recreate This App
 
-To "wire up" this application in a different or new Next.js project, you'll need to move all the essential code and configurations. Here’s a step-by-step guide:
+You can use the following detailed prompt in a new Firebase Studio project to recreate this application. Just copy and paste it as your first instruction.
 
-### 1. Set Up Your New Project
-
-If you're starting from scratch, create a new Next.js application. You can use the following command:
-
-```bash
-npx create-next-app@latest my-new-app --typescript --tailwind --eslint
-```
-
-### 2. Copy Source Code Directories
-
-Copy the entire `src` directory from this project into your new project's root folder. This contains all the essential application logic:
-- `src/app`: All pages, layouts, and routes.
-- `src/components`: All reusable React components.
-- `src/lib`: Utility functions, type definitions, and publisher logic.
-- `src/ai`: All Genkit flows and AI-related code.
-- `src/services`: Data-fetching services (news and stocks).
-- `src/hooks`: Custom React hooks.
-
-### 3. Merge `package.json`
-
-Open the `package.json` file from this project and the one in your new project. You need to copy all the packages from the `dependencies` and `devDependencies` sections into your new project's `package.json`. Make sure not to overwrite any essential scripts from your new project.
-
-### 4. Copy Configuration Files
-
-Copy the following configuration files from this project's root directory to your new project's root directory. These files define how your app is styled, built, and configured.
-
-- `tailwind.config.ts`
-- `next.config.ts`
-- `tsconfig.json`
-- `components.json`
-- `apphosting.yaml` (if you plan to use Firebase App Hosting)
-
-### 5. Set Up Environment Variables
-
-Create a file named `.env.local` in the root of your new project. Open the `.env` file from this project and copy its contents into your new `.env.local` file. You will need to provide your own API keys for any services that require them (like the Gemini API).
-
-Example `.env.local` content:
-```
-GEMINI_API_KEY=YOUR_API_KEY_HERE
-```
-
-### 6. Install Packages and Run
-
-Once all the files are in place, navigate to your new project's directory in your terminal and install all the required packages by running:
-
-```bash
-npm install
-```
-
-After the installation is complete, you can start the development server:
-
-```bash
-npm run dev
-```
-
-Your application should now be running locally, fully wired up and ready to go!
+> Let's build a financial news aggregator called "MarketWatch Live".
+>
+> **1. Core Functionality: News Feed**
+> - Create a service at `src/services/news-fetcher.ts` that uses the `rss-parser` library to fetch news from two sources: the Yahoo Finance top stories RSS feed and the NASDAQ press releases RSS feed.
+> - The main page should display these articles in a feed.
+> - Create a `NewsCard` component at `src/components/news-card.tsx` to display each article's title, source, and time since publication.
+> - In the header, add two buttons: "Home" and "NASDAQ". The "Home" button should show the general Yahoo Finance feed, and the "NASDAQ" button should show only news from the NASDAQ feed.
+>
+> **2. AI-Powered Analysis**
+> - Integrate Google's Genkit for AI functionality.
+> - Create an AI flow at `src/ai/flows/summarize-article.ts` that takes an article URL, fetches its content, and returns a concise summary.
+> - Create a second, more complex AI flow at `src/ai/flows/analyze-article.ts`. This flow should take article text as input and:
+>     a. Use a tool to identify stock tickers mentioned in the text. For each ticker, call a mock stock price fetcher.
+>     b. Extract 3-5 key takeaways.
+>     c. Determine the article's main topic.
+>     d. Analyze the sentiment (Positive, Negative, or Neutral).
+> - On the `NewsCard`, add an "Analyze" button. When clicked, it should first call the summarization flow with the article's URL and then feed the resulting summary into the analysis flow.
+> - Display the AI analysis results (summary, tickers, takeaways, topic, and sentiment) in a new `CommentSection` component below the news card. Use icons to represent each piece of information.
+> - Add user-friendly toast notifications for any errors during the analysis process.
+>
+> **3. UI and UX Enhancements**
+> - Instead of a generic icon for the publisher, create a utility in `src/lib/publishers.ts` that maps publisher names (like 'Reuters', 'Bloomberg') to their domain. Use the Clearbit API (`https://logo.clearbit.com/DOMAIN`) to dynamically fetch and display the publisher's logo on each `NewsCard`.
+> - Add a search bar to the header that filters news articles by title in real-time.
+> - Add a "like" button with a `ThumbsUp` icon to each `NewsCard`.
+> - Create a user profile page at `/profile` that includes a cover photo, an avatar, and a bio section that the user can edit.
+> - Add a subtle, animated "falling stars" particle effect to the background of the entire app for visual appeal.
+> - Ensure the entire application uses a dark theme and is styled professionally using ShadCN UI components and Tailwind CSS.
