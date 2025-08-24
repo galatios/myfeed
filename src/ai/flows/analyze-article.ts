@@ -18,7 +18,7 @@ const TickerSchema = z.object({
   symbol: z
     .string()
     .describe('The stock ticker symbol, without the `$` prefix.'),
-  price: z.number().describe('The current price of the stock.'),
+  price: z.number().describe('The mock price of the stock.'),
 });
 
 // Input schema for the analysis flow
@@ -50,7 +50,7 @@ export type AnalyzeArticleOutput = z.infer<typeof AnalyzeArticleOutputSchema>;
 const getStockPrice = ai.defineTool(
   {
     name: 'getStockPrice',
-    description: 'Returns the current market value of a stock.',
+    description: 'Returns a mock market value of a stock for demonstration.',
     inputSchema: z.object({
       ticker: z.string().describe('The ticker symbol of the stock.'),
     }),
@@ -74,7 +74,7 @@ const analyzeArticlePrompt = ai.definePrompt({
 </article>
 
 Your task is to:
-1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its current price. If no tickers are found, return an empty array.
+1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its mock price for this analysis. If no tickers are found, return an empty array.
 2.  Generate a list of 3-5 key takeaways or bullet points.
 3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, General.
 4.  Analyze the overall sentiment of the article and classify it as Positive, Negative, or Neutral.
