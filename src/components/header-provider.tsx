@@ -7,16 +7,13 @@ export type FeedView = 'home';
 export const SearchContext = createContext({
     searchTerm: '',
     setSearchTerm: (term: string) => {},
-    view: 'home' as FeedView,
-    setView: (() => {}) as Dispatch<SetStateAction<FeedView>>,
 });
 
 export function HeaderProvider({ children }: { children: React.ReactNode }) {
     const [searchTerm, setSearchTerm] = useState('');
-    const [view, setView] = useState<FeedView>('home');
 
     return (
-        <SearchContext.Provider value={{ searchTerm, setSearchTerm, view, setView }}>
+        <SearchContext.Provider value={{ searchTerm, setSearchTerm }}>
             <div className="flex min-h-screen flex-col bg-transparent">
                 <Header 
                     searchTerm={searchTerm} 

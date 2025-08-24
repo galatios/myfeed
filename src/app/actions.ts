@@ -6,19 +6,8 @@ import { analyzeArticle } from '@/ai/flows/analyze-article';
 import type { NewsArticle, AnalysisResult } from '@/lib/types';
 import { fetchHomeNews } from '@/services/news-fetcher';
 
-export async function fetchAllNewsAction(
-  searchTerm?: string
-): Promise<NewsArticle[]> {
+export async function fetchAllNewsAction(): Promise<NewsArticle[]> {
   let articles = await fetchHomeNews();
-  
-  if (searchTerm) {
-    const lowercasedTerm = searchTerm.toLowerCase();
-    articles = articles.filter(
-      (article) =>
-        article.title.toLowerCase().includes(lowercasedTerm)
-    );
-  }
-  
   return articles;
 }
 

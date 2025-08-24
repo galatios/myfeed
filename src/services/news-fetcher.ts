@@ -1,7 +1,7 @@
 
 import Parser from 'rss-parser';
 import { NewsArticle } from '@/lib/types';
-import { getPublisherLogo, getPublisherFromLink, nasdaqSources } from '@/lib/publishers';
+import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
 
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
@@ -47,12 +47,9 @@ export async function fetchHomeNews(): Promise<NewsArticle[]> {
 
     const [yahooArticles, videos] = await Promise.all([yahooArticlePromise, videoPromise]);
     
-    // Filter out any nasdaq related articles from yahoo feed if any
-    const nonNasdaqArticles = yahooArticles.filter(a => !nasdaqSources.has(a.source));
-
-    const articleTitles = new Set(nonNasdaqArticles.map(a => a.title));
+    const articleTitles = new Set(yahooArticles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 
-    const combined = [...nonNasdaqArticles, ...uniqueVideos];
+    const combined = [...yahooArticles, ...uniqueVideos];
     return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }

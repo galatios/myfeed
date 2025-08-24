@@ -33,16 +33,6 @@ export function Header({ searchTerm, onSearchChange }: HeaderProps) {
           </div>
         </div>
         
-        <div className="hidden md:flex items-center space-x-2">
-            <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-12 w-24 rounded-none border-b-2 border-primary text-primary"
-            >
-                <Home className="h-7 w-7" />
-            </Button>
-        </div>
-
         <div className="flex items-center space-x-2">
           <Button variant="secondary" size="icon" className="rounded-full">
             <MessageSquare className="h-5 w-5" />

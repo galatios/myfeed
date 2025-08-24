@@ -9,7 +9,7 @@ This application was developed iteratively through a conversation-driven process
 1.  **Initial Setup**: The application began as a standard Next.js starter project with TypeScript, Tailwind CSS, and ShadCN UI components.
 
 2.  **Core News Feed**:
-    *   An RSS parser was implemented in `src/services/news-fetcher.ts` to fetch top stories and videos from the Yahoo Finance RSS feed and press releases from the NASDAQ feed.
+    *   An RSS parser was implemented in `src/services/news-fetcher.ts` to fetch top stories and videos from the Yahoo Finance RSS feed.
     *   A `NewsCard` component (`src/components/news-card.tsx`) was created to display each article, including its title, image, and source.
     *   A `NewsSidebar` (`src/components/news-sidebar.tsx`) was added to show a list of trending articles.
 
@@ -27,7 +27,8 @@ This application was developed iteratively through a conversation-driven process
     *   **Profile Page**: A user profile page was created at `/profile` with a cover photo, avatar, and an editable bio section.
     *   **Search and Interactivity**: A search bar was implemented in the header to filter the news feed, and a "like" button was added to each news card.
 
-This combination of a real-time news feed and powerful AI analysis creates a rich, interactive experience for users interested in financial markets.
+5.  **Component Refactoring for Integration**:
+    *   The entire news feed functionality was refactored into a single, portable React component: `<MarketWatchLive />`. This makes it easy to embed the entire news aggregator into another existing application.
 
 ## Prompt to Recreate This App
 
@@ -36,10 +37,9 @@ You can use the following detailed prompt in a new Firebase Studio project to re
 > Let's build a financial news aggregator called "MarketWatch Live".
 >
 > **1. Core Functionality: News Feed**
-> - Create a service at `src/services/news-fetcher.ts` that uses the `rss-parser` library to fetch news from two sources: the Yahoo Finance top stories RSS feed and the NASDAQ press releases RSS feed.
+> - Create a service at `src/services/news-fetcher.ts` that uses the `rss-parser` library to fetch news from the Yahoo Finance top stories and videos RSS feeds.
 > - The main page should display these articles in a feed.
 > - Create a `NewsCard` component at `src/components/news-card.tsx` to display each article's title, source, and time since publication.
-> - In the header, add two buttons: "Home" and "NASDAQ". The "Home" button should show the general Yahoo Finance feed, and the "NASDAQ" button should show only news from the NASDAQ feed.
 >
 > **2. AI-Powered Analysis**
 > - Integrate Google's Genkit for AI functionality.
@@ -60,3 +60,48 @@ You can use the following detailed prompt in a new Firebase Studio project to re
 > - Create a user profile page at `/profile` that includes a cover photo, an avatar, and a bio section that the user can edit.
 > - Add a subtle, animated "falling stars" particle effect to the background of the entire app for visual appeal.
 > - Ensure the entire application uses a dark theme and is styled professionally using ShadCN UI components and Tailwind CSS.
+>
+> **4. Portability**
+> - Finally, refactor the entire news feed UI and logic from the main page into a single, self-contained component called `<MarketWatchLive />` located at `src/components/market-watch-live.tsx`. Make the main page simply render this new component. This will make the news feed easy to embed in other applications.
+
+## Integrating Into Your Main App
+
+After refactoring, the entire news feed is encapsulated in the `<MarketWatchLive />` component. Here’s a basic guide to integrating it into your main application:
+
+1.  **Copy Folders**: Copy the following folders from this project into your main project's `src` folder:
+    *   `src/components/`
+    *   `src/lib/`
+    *   `src/services/`
+    *   `src/ai/`
+    *   `src/hooks/`
+    *   The `src/app/actions.ts` file.
+
+2.  **Merge Dependencies**: Open the `package.json` file from this project. Carefully copy all the dependencies from the `"dependencies"` section into the `package.json` of your main app. Do the same for `"devDependencies"`. Then, run `npm install` (or your package manager's install command) in your main app's directory.
+
+3.  **Merge Tailwind & CSS**:
+    *   Copy the `tailwind.config.ts` file. You may need to merge its contents with your existing Tailwind config if you have one.
+    *   Open `src/app/globals.css` and copy the CSS variable definitions (the `@layer base` sections) into your main app's global stylesheet.
+
+4.  **Use the Component**: Now, in any page of your main application, you can import and use the news feed like this:
+
+    ```jsx
+    import { MarketWatchLive } from '@/components/market-watch-live';
+
+    function YourPage() {
+      return (
+        <div>
+          <h1>My Awesome Dashboard</h1>
+          {/* Other content... */}
+
+          <section>
+            <h2>Latest Financial News</h2>
+            <MarketWatchLive />
+          </section>
+
+          {/* Other content... */}
+        </div>
+      );
+    }
+    ```
+
+This approach keeps the news feed's code separate and organized within your main application, making it much easier to maintain.
