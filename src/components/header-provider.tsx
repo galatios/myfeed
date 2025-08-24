@@ -2,7 +2,7 @@
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 import { Header } from "./header";
 
-export type FeedView = 'home' | 'nasdaq';
+export type FeedView = 'home';
 
 export const SearchContext = createContext({
     searchTerm: '',
@@ -21,8 +21,6 @@ export function HeaderProvider({ children }: { children: React.ReactNode }) {
                 <Header 
                     searchTerm={searchTerm} 
                     onSearchChange={setSearchTerm}
-                    view={view}
-                    onViewChange={setView} 
                 />
                 {children}
             </div>

@@ -1,4 +1,4 @@
-import { Home, Bell, MessageSquare, Newspaper, Search } from 'lucide-react';
+import { Home, Bell, MessageSquare, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -11,17 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from 'next/link';
-import type { FeedView } from './header-provider';
-import { cn } from '@/lib/utils';
 
 interface HeaderProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
-  view: FeedView;
-  onViewChange: (view: FeedView) => void;
 }
 
-export function Header({ searchTerm, onSearchChange, view, onViewChange }: HeaderProps) {
+export function Header({ searchTerm, onSearchChange }: HeaderProps) {
   return (
     <header className="sticky top-0 z-20 w-full border-b bg-card/50 backdrop-blur-lg shadow-sm">
       <div className="container flex h-14 items-center justify-between px-4">
@@ -41,24 +37,9 @@ export function Header({ searchTerm, onSearchChange, view, onViewChange }: Heade
             <Button 
                 variant="ghost" 
                 size="icon" 
-                className={cn(
-                    "h-12 w-24 rounded-none",
-                    view === 'home' ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
-                )}
-                onClick={() => onViewChange('home')}
+                className="h-12 w-24 rounded-none border-b-2 border-primary text-primary"
             >
                 <Home className="h-7 w-7" />
-            </Button>
-            <Button 
-                variant="ghost" 
-                size="icon" 
-                className={cn(
-                    "h-12 w-24 rounded-none",
-                    view === 'nasdaq' ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
-                )}
-                onClick={() => onViewChange('nasdaq')}
-            >
-                <Newspaper className="h-7 w-7" />
             </Button>
         </div>
 

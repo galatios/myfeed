@@ -8,7 +8,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { NewsSidebar } from '@/components/news-sidebar';
 import { SearchContext } from '@/components/header-provider';
-import { nasdaqSources } from '@/lib/publishers';
 
 function NewsSkeleton() {
   return (
@@ -48,7 +47,7 @@ function NewsSkeleton() {
 export default function Home() {
   const [allNews, setAllNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const { searchTerm, view } = useContext(SearchContext);
+  const { searchTerm } = useContext(SearchContext);
   const [likedArticles, setLikedArticles] = useState<Set<string>>(new Set());
 
   const toggleLike = (articleId: string) => {
@@ -76,12 +75,6 @@ export default function Home() {
 
   const filteredNews = useMemo(() => {
     let newsToFilter = allNews;
-
-    if (view === 'home') {
-      newsToFilter = newsToFilter.filter(item => !nasdaqSources.has(item.source) && !item.isVideo);
-    } else if (view === 'nasdaq') {
-      newsToFilter = newsToFilter.filter(item => nasdaqSources.has(item.source));
-    }
     
     if (searchTerm) {
       const lowercasedTerm = searchTerm.toLowerCase();
@@ -91,7 +84,7 @@ export default function Home() {
     }
 
     return newsToFilter;
-  }, [allNews, searchTerm, view]);
+  }, [allNews, searchTerm]);
 
 
   return (

@@ -4,12 +4,12 @@
 import { summarizeArticle } from '@/ai/flows/summarize-article';
 import { analyzeArticle } from '@/ai/flows/analyze-article';
 import type { NewsArticle, AnalysisResult } from '@/lib/types';
-import { fetchAllNews } from '@/services/news-fetcher';
+import { fetchHomeNews } from '@/services/news-fetcher';
 
 export async function fetchAllNewsAction(
   searchTerm?: string
 ): Promise<NewsArticle[]> {
-  let articles = await fetchAllNews();
+  let articles = await fetchHomeNews();
   
   if (searchTerm) {
     const lowercasedTerm = searchTerm.toLowerCase();
