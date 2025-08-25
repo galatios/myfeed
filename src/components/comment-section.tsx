@@ -110,11 +110,11 @@ export function CommentSection({ analysis, loading }: CommentSectionProps) {
                     <AvatarFallback><TrendingUp className="h-4 w-4"/></AvatarFallback>
                 </Avatar>
                 <div className="flex-1 rounded-2xl bg-secondary px-3 py-2 text-sm">
-                    <p className="font-semibold text-green-500">Stock Tickers</p>
+                    <p className="font-semibold text-green-500">Mentioned Tickers</p>
                     <div className="flex flex-wrap gap-2 mt-2">
                         {analysis.tickers.map(ticker => (
-                            <div key={ticker.symbol} className="bg-background border rounded-full px-3 py-1 text-xs">
-                                <span className="font-bold">{ticker.symbol}:</span> ${ticker.price.toFixed(2)}
+                            <div key={ticker.symbol} className="bg-background border rounded-full px-3 py-1 text-xs font-bold">
+                                {ticker.symbol}
                             </div>
                         ))}
                     </div>

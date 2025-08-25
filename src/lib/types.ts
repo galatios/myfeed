@@ -19,7 +19,6 @@ export interface AnalysisResult {
   summary: string | null;
   tickers: {
     symbol: string;
-    price: number;
   }[];
   keyTakeaways: string[];
   topic: string;

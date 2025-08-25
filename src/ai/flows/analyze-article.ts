@@ -11,14 +11,12 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { getMockStockPrice } from '@/services/stock-fetcher';
 
 // Define the schema for a stock ticker
 const TickerSchema = z.object({
   symbol: z
     .string()
     .describe('The stock ticker symbol, without the `$` prefix.'),
-  price: z.number().describe('The mock price of the stock.'),
 });
 
 // Input schema for the analysis flow
@@ -46,27 +44,11 @@ const AnalyzeArticleOutputSchema = z.object({
 });
 export type AnalyzeArticleOutput = z.infer<typeof AnalyzeArticleOutputSchema>;
 
-// Tool to get stock price
-const getStockPrice = ai.defineTool(
-  {
-    name: 'getStockPrice',
-    description: 'Returns a mock market value of a stock for demonstration.',
-    inputSchema: z.object({
-      ticker: z.string().describe('The ticker symbol of the stock.'),
-    }),
-    outputSchema: z.number(),
-  },
-  async (input) => {
-    return getMockStockPrice(input.ticker);
-  }
-);
-
 // Prompt for article analysis
 const analyzeArticlePrompt = ai.definePrompt({
   name: 'analyzeArticlePrompt',
   input: { schema: AnalyzeArticleInputSchema },
   output: { schema: AnalyzeArticleOutputSchema },
-  tools: [getStockPrice],
   prompt: `Analyze the following news article content.
 
 <article>
@@ -74,7 +56,7 @@ const analyzeArticlePrompt = ai.definePrompt({
 </article>
 
 Your task is to:
-1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). For each ticker, use the getStockPrice tool to find its mock price for this analysis. If no tickers are found, return an empty array.
+1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). If no tickers are found, return an empty array.
 2.  Generate a list of 3-5 key takeaways or bullet points.
 3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, General.
 4.  Analyze the overall sentiment of the article and classify it as Positive, Negative, or Neutral.
