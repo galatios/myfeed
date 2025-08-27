@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i-invdn-com.investing.com',
+        hostname: '**.investing.com',
         pathname: '/**',
       },
       {
