@@ -51,7 +51,7 @@ async function fetchNewsFeed(url: string, isVideo: boolean = false): Promise<New
     try {
         const feed = await parser.parseURL(url);
         
-        return feed.items.map((item) => {
+        const articles = feed.items.map((item) => {
           const link = item.link || '';
           const source = getPublisherFromLink(link) || item.creator || 'Unknown Source';
           
@@ -65,7 +65,10 @@ async function fetchNewsFeed(url: string, isVideo: boolean = false): Promise<New
             imageUrl: extractImageUrl(item),
             isVideo,
           };
-        }).filter(item => item.id && item.link);
+        });
+
+        // Filter for valid items that have an image URL
+        return articles.filter(item => item.id && item.link && item.imageUrl);
     
       } catch (error) {
         console.error(`Error fetching or parsing RSS feed from ${url}:`, error);
@@ -93,3 +96,4 @@ export async function fetchHomeNews(): Promise<NewsArticle[]> {
 export async function fetchAllNews(): Promise<NewsArticle[]> {
   return fetchHomeNews();
 }
+
