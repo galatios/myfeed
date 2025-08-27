@@ -2,6 +2,7 @@
 
 
 
+
 // A map of publisher names to their domains.
 // This is used to construct the Clearbit logo URL.
 const publisherDomains: Record<string, string> = {
@@ -11,6 +12,7 @@ const publisherDomains: Record<string, string> = {
     'Business Wire': 'businesswire.com',
     'Associated Press': 'ap.org',
     'Investors.com': 'investors.com',
+    'Investor\'s Business Daily': 'investors.com',
     'MarketWatch': 'marketwatch.com',
     'Yahoo Finance': 'finance.yahoo.com',
     'Zacks': 'zacks.com',
@@ -27,7 +29,6 @@ const publisherDomains: Record<string, string> = {
     'insidermonkey.com': 'insidermonkey.com',
     'GOBankingRates': 'gobankingrates.com',
     'gobankingrates.com': 'gobankingrates.com',
-    'Investor\'s Business Daily': 'investors.com',
     'Barchart': 'barchart.com',
     'barchart.com': 'barchart.com',
     'Decrypt': 'decrypt.co',

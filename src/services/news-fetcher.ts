@@ -5,6 +5,8 @@ import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
 
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
+const IBD_NEWS_RSS_URL = 'http://feeds.investors.com/ivd/xml/rss/news.xml';
+
 
 const parser = new Parser({
   customFields: {
@@ -15,13 +17,13 @@ const parser = new Parser({
   },
 });
 
-async function fetchYahooFeed(url: string, isVideo: boolean = false): Promise<NewsArticle[]> {
+async function fetchNewsFeed(url: string, isVideo: boolean = false): Promise<NewsArticle[]> {
     try {
         const feed = await parser.parseURL(url);
         
         return feed.items.map((item) => {
           const link = item.link || '';
-          const source = getPublisherFromLink(link) || item.creator || 'Yahoo Finance';
+          const source = getPublisherFromLink(link) || item.creator || 'Unknown Source';
           
           return {
             id: item.guid || link,
@@ -42,14 +44,17 @@ async function fetchYahooFeed(url: string, isVideo: boolean = false): Promise<Ne
 }
 
 export async function fetchHomeNews(): Promise<NewsArticle[]> {
-    const yahooArticlePromise = fetchYahooFeed(YAHOO_FINANCE_STORIES_RSS_URL, false);
-    const videoPromise = fetchYahooFeed(YAHOO_FINANCE_VIDEOS_RSS_URL, true);
+    const yahooArticlePromise = fetchNewsFeed(YAHOO_FINANCE_STORIES_RSS_URL, false);
+    const videoPromise = fetchNewsFeed(YAHOO_FINANCE_VIDEOS_RSS_URL, true);
+    const ibdPromise = fetchNewsFeed(IBD_NEWS_RSS_URL, false);
 
-    const [yahooArticles, videos] = await Promise.all([yahooArticlePromise, videoPromise]);
+
+    const [yahooArticles, videos, ibdArticles] = await Promise.all([yahooArticlePromise, videoPromise, ibdPromise]);
     
-    const articleTitles = new Set(yahooArticles.map(a => a.title));
+    const combinedArticles = [...yahooArticles, ...ibdArticles];
+    const articleTitles = new Set(combinedArticles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 
-    const combined = [...yahooArticles, ...uniqueVideos];
-    return combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    const allItems = [...combinedArticles, ...uniqueVideos];
+    return allItems.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
