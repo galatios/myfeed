@@ -1,9 +1,3 @@
-
-
-
-
-
-
 // A map of publisher names to their domains.
 // This is used to construct the Clearbit logo URL.
 const publisherDomains: Record<string, string> = {
@@ -106,4 +100,8 @@ export function getPublisherLogo(publisherName: string): string | undefined {
     }
 
     return undefined;
+}
+
+export function isInvestingCom(source: string): boolean {
+    return source === 'Investing.com';
 }

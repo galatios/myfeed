@@ -1,7 +1,6 @@
-
 import Parser from 'rss-parser';
 import { NewsArticle } from '@/lib/types';
-import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
+import { getPublisherLogo, getPublisherFromLink, isInvestingCom } from '@/lib/publishers';
 
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
@@ -65,6 +64,7 @@ async function fetchNewsFeed(url: string, isVideo: boolean = false): Promise<New
               timestamp: item.isoDate || new Date().toISOString(),
               imageUrl: extractImageUrl(item),
               isVideo,
+              isHotlinkProtected: isInvestingCom(source),
             };
           })
           .filter(item => item.id && item.link && item.imageUrl); // Filter for valid items that have an image URL

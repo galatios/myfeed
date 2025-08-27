@@ -94,6 +94,38 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
     }
   };
 
+  const renderImage = () => {
+    if (!article.imageUrl) return null;
+
+    // Use a regular <img> tag for sources with hotlink protection
+    if (article.isHotlinkProtected) {
+      return (
+        <div className="relative aspect-video w-full">
+          <img
+            src={article.imageUrl}
+            alt={article.title}
+            className="object-cover w-full h-full"
+            loading="lazy"
+            data-ai-hint="article image"
+          />
+        </div>
+      );
+    }
+
+    // Use Next.js Image component for all other sources
+    return (
+      <div className="relative aspect-video w-full">
+        <Image
+          src={article.imageUrl}
+          alt={article.title}
+          fill
+          className="object-cover"
+          data-ai-hint="article image"
+        />
+      </div>
+    );
+  };
+
   return (
     <Card className="animate-in fade-in-0 duration-500 ease-out">
       <CardHeader className="p-3">
@@ -127,17 +159,9 @@ export function NewsCard({ article, isLiked, onToggleLike }: NewsCardProps) {
       <CardContent className="p-0">
         {article.isVideo && article.link ? (
             <VideoPlayer src={article.link} />
-        ) : article.imageUrl ? (
-            <div className="relative aspect-video w-full">
-                <Image
-                    src={article.imageUrl}
-                    alt={article.title}
-                    fill
-                    className="object-cover"
-                    data-ai-hint="article image"
-                />
-            </div>
-        ) : null}
+        ) : (
+          renderImage()
+        )}
       </CardContent>
 
       <div className="px-3 pb-1 pt-2">

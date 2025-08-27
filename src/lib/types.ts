@@ -7,6 +7,7 @@ export interface NewsArticle {
   timestamp: string;
   imageUrl?: string;
   isVideo: boolean;
+  isHotlinkProtected?: boolean;
   topic?: string;
 }
 
