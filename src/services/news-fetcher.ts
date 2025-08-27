@@ -19,25 +19,31 @@ const parser = new Parser({
 });
 
 function extractImageUrl(item: Parser.Item): string | undefined {
+    let imageUrl: string | undefined = undefined;
     // Case 1: Standard media:content tag (used by Yahoo)
     if (item.mediaContent?.$?.url) {
-        return item.mediaContent.$.url;
+        imageUrl = item.mediaContent.$.url;
     }
 
     // Case 2: Image URL inside an enclosure tag (used by IBD)
-    if (item.enclosure?.url && item.enclosure.type?.startsWith('image/')) {
-        return item.enclosure.url;
+    else if (item.enclosure?.url && item.enclosure.type?.startsWith('image/')) {
+        imageUrl = item.enclosure.url;
     }
 
     // Case 3: Image URL inside an <img /> tag in the content (used by Investing.com)
-    if (item.content) {
+    else if (item.content) {
         const match = item.content.match(/<img[^>]+src="([^">]+)"/);
         if (match && match[1]) {
-            return match[1];
+            imageUrl = match[1];
         }
     }
 
-    return undefined;
+    // Ensure URL is https
+    if (imageUrl && imageUrl.startsWith('http://')) {
+        return imageUrl.replace('http://', 'https://');
+    }
+
+    return imageUrl;
 }
 
 
