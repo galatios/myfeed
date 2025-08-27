@@ -56,7 +56,7 @@ const analyzeArticlePrompt = ai.definePrompt({
 </article>
 
 Your task is to:
-1.  Identify all stock tickers mentioned (e.g., $GOOG, $AAPL). If no tickers are found, return an empty array.
+1.  Identify all stock tickers mentioned. This includes explicit tickers like $GOOG or $AAPL, as well as company names like "LendingClub". For company names, find their corresponding ticker symbol (e.g., LC for LendingClub). Return a unique list of ticker symbols. If no tickers or companies are found, return an empty array.
 2.  Generate a list of 3-5 key takeaways or bullet points.
 3.  Determine the main topic of the article from one of the following categories: Technology, Finance, Geopolitics, Economy, Healthcare, Energy, General.
 4.  Analyze the overall sentiment of the article and classify it as Positive, Negative, or Neutral.
