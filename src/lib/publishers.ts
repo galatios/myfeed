@@ -3,6 +3,7 @@
 
 
 
+
 // A map of publisher names to their domains.
 // This is used to construct the Clearbit logo URL.
 const publisherDomains: Record<string, string> = {
@@ -42,6 +43,7 @@ const publisherDomains: Record<string, string> = {
     'freightwaves.com': 'freightwaves.com',
     'NASDAQ': 'nasdaq.com',
     'GlobeNewswire via COMTEX': 'globenewswire.com',
+    'Investing.com': 'investing.com',
 };
 
 export const nasdaqSources = new Set(['NASDAQ', 'GlobeNewswire', 'GlobeNewswire via COMTEX', 'Business Wire', 'PR Newswire']);

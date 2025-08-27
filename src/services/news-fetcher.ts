@@ -6,6 +6,7 @@ import { getPublisherLogo, getPublisherFromLink } from '@/lib/publishers';
 const YAHOO_FINANCE_STORIES_RSS_URL = 'https://finance.yahoo.com/rss/topstories';
 const YAHOO_FINANCE_VIDEOS_RSS_URL = 'https://finance.yahoo.com/rss/videos';
 const IBD_NEWS_RSS_URL = 'http://feeds.investors.com/ivd/xml/rss/news.xml';
+const INVESTING_COM_NEWS_RSS_URL = 'https://www.investing.com/rss/news.rss';
 
 
 const parser = new Parser({
@@ -47,14 +48,19 @@ export async function fetchHomeNews(): Promise<NewsArticle[]> {
     const yahooArticlePromise = fetchNewsFeed(YAHOO_FINANCE_STORIES_RSS_URL, false);
     const videoPromise = fetchNewsFeed(YAHOO_FINANCE_VIDEOS_RSS_URL, true);
     const ibdPromise = fetchNewsFeed(IBD_NEWS_RSS_URL, false);
+    const investingPromise = fetchNewsFeed(INVESTING_COM_NEWS_RSS_URL, false);
 
 
-    const [yahooArticles, videos, ibdArticles] = await Promise.all([yahooArticlePromise, videoPromise, ibdPromise]);
+    const [yahooArticles, videos, ibdArticles, investingArticles] = await Promise.all([yahooArticlePromise, videoPromise, ibdPromise, investingPromise]);
     
-    const combinedArticles = [...yahooArticles, ...ibdArticles];
+    const combinedArticles = [...yahooArticles, ...ibdArticles, ...investingArticles];
     const articleTitles = new Set(combinedArticles.map(a => a.title));
     const uniqueVideos = videos.filter(v => !articleTitles.has(v.title));
 
     const allItems = [...combinedArticles, ...uniqueVideos];
     return allItems.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+}
+
+export async function fetchAllNews(): Promise<NewsArticle[]> {
+  return fetchHomeNews();
 }
