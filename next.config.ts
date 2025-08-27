@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'i-invdn-com.investing.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'csv-storage.forexpros.com',
+        pathname: '/**',
       }
     ],
   },
