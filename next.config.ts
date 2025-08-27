@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'logo.clearbit.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i-invdn-com.investing.com',
+        pathname: '/**',
       }
     ],
   },
