@@ -51,24 +51,25 @@ async function fetchNewsFeed(url: string, isVideo: boolean = false): Promise<New
     try {
         const feed = await parser.parseURL(url);
         
-        const articles = feed.items.map((item) => {
-          const link = item.link || '';
-          const source = getPublisherFromLink(link) || item.creator || 'Unknown Source';
-          
-          return {
-            id: item.guid || link,
-            title: item.title || 'No title',
-            link: link,
-            source: source,
-            sourceLogoUrl: getPublisherLogo(source),
-            timestamp: item.isoDate || new Date().toISOString(),
-            imageUrl: extractImageUrl(item),
-            isVideo,
-          };
-        });
+        const articles = feed.items
+          .map((item) => {
+            const link = item.link || '';
+            const source = getPublisherFromLink(link) || item.creator || 'Unknown Source';
+            
+            return {
+              id: item.guid || link,
+              title: item.title || 'No title',
+              link: link,
+              source: source,
+              sourceLogoUrl: getPublisherLogo(source),
+              timestamp: item.isoDate || new Date().toISOString(),
+              imageUrl: extractImageUrl(item),
+              isVideo,
+            };
+          })
+          .filter(item => item.id && item.link && item.imageUrl); // Filter for valid items that have an image URL
 
-        // Filter for valid items that have an image URL
-        return articles.filter(item => item.id && item.link && item.imageUrl);
+        return articles;
     
       } catch (error) {
         console.error(`Error fetching or parsing RSS feed from ${url}:`, error);
@@ -96,4 +97,3 @@ export async function fetchHomeNews(): Promise<NewsArticle[]> {
 export async function fetchAllNews(): Promise<NewsArticle[]> {
   return fetchHomeNews();
 }
-
