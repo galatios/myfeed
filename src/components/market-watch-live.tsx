@@ -73,7 +73,7 @@ export function MarketWatchLive() {
 
   return (
     <main className="flex-1">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-8 py-6">
+      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 py-6 px-2 md:px-4">
         <NewsSidebar articles={allNews} likedArticles={likedArticles} onToggleLike={toggleLike} loading={loading} />
         <div className="w-full">
           <div className="space-y-4">

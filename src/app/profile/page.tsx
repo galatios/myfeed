@@ -106,7 +106,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="mt-8">
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {profileLinks.map((link, index) => (
                     <Card key={index} className="hover:bg-secondary/50 transition-colors">
                         <a href={link.url} target="_blank" rel="noopener noreferrer" className="block">

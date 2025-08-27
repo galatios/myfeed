@@ -31,7 +31,7 @@ function SidebarSkeleton() {
 
 export function NewsSidebar({ articles, likedArticles, onToggleLike, loading }: NewsSidebarProps) {
   return (
-    <Card className="sticky top-20 h-[calc(100vh-6rem)] hidden md:block">
+    <Card className="sticky top-20 h-[calc(100vh-6rem)] hidden lg:block">
       <CardHeader>
         <h2 className="text-lg font-bold">Trending News</h2>
       </CardHeader>
