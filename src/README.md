@@ -15,7 +15,7 @@ This application was developed iteratively through a conversation-driven process
 
 3.  **AI-Powered Article Analysis**:
     *   Google's Genkit was integrated to add generative AI capabilities (`src/ai/genkit.ts`).
-    *   An AI flow was created (`src/ai/flows/analyze-article.ts`) to analyze article content. This flow identifies mentioned stock tickers (using a tool to fetch mock prices), extracts key takeaways, determines the overall topic, and analyzes the sentiment (Positive, Negative, or Neutral).
+    *   An AI flow was created (`src/ai/flows/analyze-article.ts`) to analyze article content. This flow identifies mentioned stock tickers, extracts key takeaways, determines the overall topic, and analyzes the sentiment (Positive, Negative, or Neutral).
     *   A second AI flow (`src/ai/flows/summarize-article.ts`) was implemented to reliably fetch and summarize content from a given URL.
     *   These flows were connected in `src/app/actions.ts`, creating a two-step analysis process: first summarize the article from its link, then analyze the summary. This robust approach handles various article formats and prevents errors.
     *   An "Analyze" button was added to each `NewsCard`, which triggers the AI analysis and displays the results in a dedicated `CommentSection` component.
@@ -45,7 +45,7 @@ You can use the following detailed prompt in a new Firebase Studio project to re
 > - Integrate Google's Genkit for AI functionality.
 > - Create an AI flow at `src/ai/flows/summarize-article.ts` that takes an article URL, fetches its content, and returns a concise summary.
 > - Create a second, more complex AI flow at `src/ai/flows/analyze-article.ts`. This flow should take article text as input and:
->     a. Use a tool to identify stock tickers mentioned in the text. For each ticker, call a mock stock price fetcher.
+>     a. Identify stock tickers mentioned in the text.
 >     b. Extract 3-5 key takeaways.
 >     c. Determine the article's main topic.
 >     d. Analyze the sentiment (Positive, Negative, or Neutral).
@@ -106,17 +106,23 @@ After refactoring, the entire news feed is encapsulated in the `<MarketWatchLive
 
 This approach keeps the news feed's code separate and organized within your main application, making it much easier to maintain.
 
+## Saving Your Work to GitHub
 
-Stage your changes: This command prepares all the modified files to be committed.
+To save your changes to your GitHub repository, run the following commands in your terminal.
 
-git add .
+1.  **Stage your changes**: This command prepares all the modified files to be committed.
+    ```bash
+    git add .
+    ```
 
-Commit your changes: This saves your staged changes to your local Git history with a descriptive message.
+2.  **Commit your changes**: This saves your staged changes to your local Git history with a descriptive message.
+    ```bash
+    git commit -m "feat: Add your descriptive commit message here"
+    ```
 
-git commit -m "feat: Add IBD news feed and fix ticker analysis"
-
-Push your commit to GitHub: This sends your committed changes from your local machine to your remote repository on GitHub.
-
-git push
+3.  **Push your commit to GitHub**: This sends your committed changes from your local machine to your remote repository on GitHub.
+    ```bash
+    git push
+    ```
 
 After running these commands, your GitHub repository will be up-to-date with all the recent work we've done.
