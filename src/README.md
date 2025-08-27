@@ -105,3 +105,18 @@ After refactoring, the entire news feed is encapsulated in the `<MarketWatchLive
     ```
 
 This approach keeps the news feed's code separate and organized within your main application, making it much easier to maintain.
+
+
+Stage your changes: This command prepares all the modified files to be committed.
+
+git add .
+
+Commit your changes: This saves your staged changes to your local Git history with a descriptive message.
+
+git commit -m "feat: Add IBD news feed and fix ticker analysis"
+
+Push your commit to GitHub: This sends your committed changes from your local machine to your remote repository on GitHub.
+
+git push
+
+After running these commands, your GitHub repository will be up-to-date with all the recent work we've done.
